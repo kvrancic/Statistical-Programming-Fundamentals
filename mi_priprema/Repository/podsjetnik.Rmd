@@ -1,0 +1,160 @@
+---
+title: "podsjetnik"
+author: "36541994 Vrančić Karlo"
+date: "2023-11-26"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+library(tidyverse)
+library(GGally) 
+library(magrittr) 
+library(tidyr)
+library(readr) 
+library(dplyr) 
+library(lubridate) 
+library(forcats)
+library(magrittr)
+
+JMBAG_Prezime_Ime_OSP_MI_2023.html
+
+matrix po defaultu se puni po stupcima
+
+genericke: imefje.imeklase
+
+in: worldPhones[worldPhones\$Year %in% c(1956, 1957, 1958),]
+
+brisanje iz liste: listaIme[[n]] \<- NULL
+
+%/% cjelobrojno, %% modulo
+
+str, head, glimpse, summary
+
+applyjevi: apply - rad s matricama, 1 za red, 2 za stupac lapply - za
+liste, rezultat uvijek lista sapply - lapply s pojednostavljenim
+rezultatom vapply - isto kao sapply, ali ima parametar npr. FUN.VALUE =
+character(2) onda mora rj biti vektor s 2 elem character
+
+dmy_hm("17.5.1977. 10:15pm") - pretvara u datum
+
+***targetaj parne elemente u vektoru***
+
+```{r}
+b[seq(2, 10000, by=2)] 
+
+```
+
+***koliko puta se pojavljuje neka vrijednost u matrici m?***
+
+```{r}
+length(which(m == VRIJEDNOST))
+alternativa: sum(m == VRIJEDNOST) 
+```
+
+***ispisi redke koji zadovoljavaju neki tamo sum uvjet***
+
+```{r}
+# NIKAD NE PISI UVJET UNUTAR APPLY FUNKCIJE JER C EOSTAT NULLOVI, PISI IZVAN 
+
+rezultat <- m[apply(m, 1, sum) > 70, ]
+
+# drugi primjer - iz liste l prebaci elemente duze od 20 - ZADRZI IMENA 
+newList <- l[lapply(l, length) > 30] # imena automatski zadrzana 
+
+```
+
+***preimenuj n-ti element liste l***
+
+```{r}
+names(l)[n] <- "novo ime"
+```
+
+***faktorizacija vektora i ispis tablice pojavljivanja***
+
+```{r}
+t.f <- factor(t, levels = c("vrlo hladno", "hladno", "umjereno", "toplo", "vrlo toplo"))
+table(t.f)
+```
+
+**Ispišite podatke o svim potresima jačim od 8 po Richteru.**
+
+```{r}
+earthquakes[earthquakes$richter == 8, ]
+
+# PAZI, INDEKSIRAMO REDAK JER ON JE TAJ KOJI NOSI VRIJEDNOST A NE STUPAC!!!!!
+```
+
+***pivotiranja***
+
+```{r}
+pivot_longer(data, cols, names_to, values_to, values_drop_na)
+
+worldPhones <- pivot_longer(worldPhones, 2:ncol(worldPhones), names_to = "WorldRegion", values_to = "NumberOfPhones") 
+
+# names_to => stupac u koji ćemo pisati ono što su prije bila imena stupaca 
+# values_to => stupac u koji pišemo vrijendnosti
+
+# prikuplja vise stupaca pod jedinstvenu varijablu i onda popunjava vrijednosti pomocu postojecih kombinacija stupac x redak
+
+pivot_wider(data, names_from, names_prefix = "", values_from, values_fill = NULL)
+
+#data = podatkovni okvir
+#names_from = ime stupaca čije vrijednosti “pivotiramo” u široki oblik
+#names_prefix = opcionalni prefiks (bez navodnika) kojeg možemo staviti novim stupcima, korisno ako su novi nazivi stupaca brojevi
+#values_from = ime stupca u kojem se nalaze vrijednosti koje raspršujemo po novoj tablici
+# values_fill = opcionalna vrijednost za nedostajuće vrijednosti; ako parametar stavimo na NULL vrijednosti će biti NA
+
+
+separate(data, col, into, sep = "[^[:alnum:]]+", remove = TRUE,
+  convert = FALSE, extra = "warn", fill = "warn", ...)
+
+#col - stupac kojeg rastavljamo (ne moramo koristiti navodnike)
+#into - imena novih stupaca (preporučuje se koristiti znakovni vektor)
+#sep - separator vrijednosti u originalnom stupcu, default-na vrijednost je zapravo regularni izraz za “nešto što nije alfanumerički znak”
+#remove - opisuje da li je potrebno ukloniti originalni stupac ili ne
+
+```
+
+***uvjeti u df vs. ispis pojedinog stupca***
+
+```{r}
+points[points$laboratory > 10 & points$homework > 5, c("studentid", "finalexam")]
+
+```
+
+***zbroj duljina elemenata liste***
+
+```{r}
+resultB <- sum(lengths(l))
+```
+
+***umnozak***
+
+```{r}
+prod 
+```
+
+***na temelju neceg stvori novi faktorski stupac***
+
+```{r}
+ifelse(points$totalPoints > 50 & !is.na(points$totalPoints), 
+       "Prolaz", "Pad"
+       ) %>% as.factor() -> points$outcome 
+```
+
+***mijenjanje vremenskih zona***
+
+```{r}
+t <- ymd_hms("20161129 10.05.17", tz = "EST")
+t
+
+force_tz(t, tz = "CET") # na silu promijeni - ostat vremena isto, samo se promijeni zona
+with_tz(t, tz = "CET") # promijeni zonu, ali i vrijeme se promijeni
+
+```

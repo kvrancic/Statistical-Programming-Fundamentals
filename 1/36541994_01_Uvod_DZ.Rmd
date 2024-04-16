@@ -1,0 +1,44 @@
+---
+title: "36541994_01_Uvod_DZ"
+author: "36541994 Vrančić Karlo"
+date: "2023-10-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# ovo je tzv. "setup chunk"
+# tu postavljamo bitne parametre te učitavamo sve nužne pakete
+# u najvećem broju slučajeva ovaj dio ne morate dirati
+# budite sigurni da razvojna okolina ima spuštene sve pakete koji su ovdje navedeni
+# sučelje RStudio će automatski detektirati ako neki nedostaju - instalirajte ih prije nastavljanja
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(results = 'hold')
+```
+
+# Domaća zadaća
+
+VAŽNO: U sljedećim zadacima znak XX predstavlja **zadnje dvije znamenke Vašeg JMBAG-a**. 
+
+Primjer: ako Vaš JMBAG glasi 12345678, onda XX predstavlja broj 78, 12XX predstavlja broj 1278, 2 * XX predstavlja broj 156 itd.
+
+**Prije rješavanja i predaje domaće zadaće izmijenite tekst zadatka tako da sve kombinacije znakova XX, YY i ZZ zamijenite pripadnim brojevima! U suprotnom se domaća zadaća neće uvažiti.**
+
+
+1. Ispišite na zaslon Vaš JMBAG.
+```{r}
+print(36541994)
+```
+
+
+2. Ispišite na zaslon broj koji se dobije dodavanjem broja 10 zadnjim dvijema znamenkama Vašeg JMBAG-a (tj. skraćeno - ispišite na zaslon broj XX + 10). Broj XX ne morate dobiti računski, možete direktno upisati zadnje dvije znamenke.
+```{r}
+print(94+10)
+```
+
+
+3. Ispišite radnu mapu u kojoj se nalazi ovaj dokument domaće zadaće.
+```{r}
+print(getwd())
+```
+

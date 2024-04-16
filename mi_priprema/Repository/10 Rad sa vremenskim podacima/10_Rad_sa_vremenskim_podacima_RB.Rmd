@@ -1,0 +1,442 @@
+---
+title: "10 rad sa datumima i znakovnim nizovima"
+author: "Damir Pintar"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(lubridate)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(results = 'hold')
+```
+
+***
+
+
+## Rad sa datumima
+
+
+Programski jezik R ima tri klase za upravljanje datumima / vremenskim oznakama:
+
+-`Date` za prikaz datuma
+-`POSIXct` za kompaktni prikaz vremenske oznake
+- `POSIXlt` za "dugi" prikaz vremenske oznake (u obliku liste)
+
+### Klasa `Date`
+
+Klasu Date koristimo kada nas zanima datum ali ne i vrijeme neke obzervacije ili poslovnog događaja. Ova klasa nema svoj konstruktor, već objekte ovog tipa (najčešće) stvaramo uz pomoć sljedećih funkcija:
+
+- `Sys.Date()` koja vraća današnji datum
+- `as.Date()` kojoj kao parametar prosljeđujemo znakovni niz koji reprezentira datum
+
+Funkcija `as.Date()` po *default*-u prihvaća datume oblika `%Y-%m-%d`, gdje `%Y` predstavlja četveroznamenkastu godinu a `%m` i `%d` dvoznamenkasti mjesec i dan. Ukoliko želimo interpetirati datum koji je zapisan u nekom drugom obliku onda moramo funkciji dodati parametar format koji će parametarski opisati oblik kojeg koristimo (npr. za `28/10/1978` bi vrijednost parametra format trebala biti `%d/%m/%Y`). Sve moguće oblikovne specifikacije mogu se pogledati uz pomoć naredbe `?strptime` iako, kao što ćemo se uvjeriti kasnije, jednostavnija metoda jest koristiti se funkcijama paketa `lubridate`.
+
+***
+
+## ZADATAK 10.1 - klasa `Date`
+
+```{r}
+# ispišite današnji datum
+
+# pretvorite sljedeće znakovne nizove u objekt tipa `Date` i ispišite rezultat na zaslon:
+# '1986-12-27','2016-31-05', '17. 10. 2015.', '01#01#2001'
+```
+
+
+***
+
+Sa datumima možemo raditi jednostavne računske operacije kao što je dodavanje i oduzimanje dana (koristimo operatore + i - i cijele brojeve) ili razliku u danima između dva datuma (operator -).
+
+***
+
+## ZADATAK 10.2 - aritmetika s datumima
+
+```{r}
+# ispišite koji je datum bio 1000 dana prije današnjeg datuma
+
+# dodajte jedan dan datumima 28.2.2015. i 28.2.2016 i ispišite rezultat
+
+# ispišite koliko je dana prošlo od 1.1.2000. do danas
+```
+
+
+
+***
+
+
+Zadnji izraz će zapravo rezultirati objektom klase `difftime` koja označava vremenski interval. Ispis koristi tzv. "automatski" odabir jedinice (konkretno, parametar units postavljen na `"auto"`) koji će pokušati odabrati najprikladniju vremensku jedinicu za ispis. Ukoliko želimo eksplicitno odabrati koju vremensku jedinicu želimo (sekunde, minute, sate, dane ili tjedne) onda možemo umjesto operatora `-` koristiti funkciju `difftime` uz parametar `units` postavljen na znakovni niz odabrane vremenski jedinice (`"seconds"`, `"minutes"`, itd.).
+
+***
+
+## ZADATAK 10.3 - funkcija `difftime`
+
+
+```{r}
+# Koliko je prošlo tjedana između 1.3.2016. i 1.3.2015.?
+# koristite funkciju `difftime`
+# NAPOMENA: ne morate eksplicitno pozvati funkciju `as.Date`, funkcija `difftime`
+#       će to sama učiniti ako pošaljete datum u default-nom obliku
+
+# koliko je prošlo sati od 1.3.2015. do danas?
+
+```
+
+
+***
+
+
+Funkcija `difftime` zapravo radi i sa vremenskim oznakama (tj. ne moramo nužno raditi na razini datuma, već se možemo spustiti do razine sekunde). Ovo ćemo isprobati kada naučimo klasu `POSIXct` u nastavku. Isto tako, ako nam treba samo broj (sekundi, sati, dana i sl.), lako se poslužimo funkcijom `as.numeric`.
+
+Jezik R implementira i posebnu varijantu funkcije `seq` za rad sa datumima koja ima sljedeći potpis:
+
+```{r, eval = F}
+
+seq(from, to, by, length.out = NULL, along.with = NULL, ...)
+
+```
+
+
+Parametri ove funkcije su sljedeći:
+
+- `from` - početni datum (obvezni parametar)
+- `to` - konačni datum
+- `by` - korak sekvence u danima ili znakovni niz tipa `"7 days"`, `"2 weeks"` i sl. (za sve mogućnosti pogledati dokumentaciju!)
+- `length.out` - duljina sekvence
+- `along.with` - vektor čiju duljinu uzimamo za referencu
+
+Isprobajmo ovu funkciju.
+
+***
+
+## ZADATAK 10.4 - funkcija `seq` i datumi
+
+```{r}
+# ispišite sekvencu datuma od 1.1.2010. do 1.1.2030. u koracima od 6 mjeseci
+
+
+# napravite raspored čišćenja zajedničkih prostora za stambenu zgradu
+# prostori se moraju čistiti svaka 3 tjedna
+# svaki stan mora imati svoj datum čišćenja
+
+# stanovi su opisani sljedećim podatkovnim okvirom
+stanovi <- data.frame(broj_stana = 1:10,
+                      prezime = c("Ebert", "Ladovac", "Cerić", "Dikla", "Anić",
+                                  "Perić", "Žužić", "Babić", "Ibiz", "Radler"))
+
+# dodajte stupac `ciscenje` sa po jednim datumom za svaki pojedini stan 
+# redom po brojevima stana, za idućih 10 čišćenja počevši od današnjeg datuma
+# (za ambiciozne: dodajte 5 takvih stupaca koji će pokrivati 50
+# nastupajućih čišćenja)
+
+
+# ispisite podatkovni okvir `stanovi` (koristite `print` ili pretvorite datume u znakovni stupac)
+
+```
+
+
+
+***
+
+### Klase `POSIXct` i `POSIXlt`
+
+Klasa `POSIXct` nam je pogodna kada nam nije dosta samo pohraniti datum, već moramo znati i točno vrijeme za neku obzervaciju ili poslovni događaj. Objekt ove klase najčešće stvaramo uz pomoć sljedećih funkcija:
+
+- `Sys.time()` koja vraća trenutnu vremensku oznaku uzimajući u obzir postavljenu vremensku zonu
+- `as.POSIXct()` kojoj kao parametar prosljeđujemo znakovni niz koji predstavlja datum i vrijeme
+
+Funkcija `as.POSIXct()` kao parametar očekuje vremensku oznaku tipa `%Y-%m-%d %H:%M:%S` gdje su prve tri oblikovne specifikacije istovjetne već poznatoj specifikaciji datuma, dok `%H`, `%M` i `%S` predstavljaju dvoznamenkaste sate, minute i sekunde (gleda se 24-satni oblik prikaza vremena). Za parsiranje drugih oblika vremenskih oznaka potrebno je - kao i kod klase `Date` - dodati parametar format sa oblikovnom specifikacijom kako intepretirati zadani znakovni niz. Opet, tu nam pomaže funkcija `?strptime` iako je poželjna opcija za lakši rad proučiti paket `lubridate` kojeg ćemo raditi kasnije. Funkciji `as.POSIXct` možemo dodati i parametar `tz` postavljen na znakovni niz koji definira vremensku zonu.
+
+***
+
+## ZADATAK 10.5 - klasa `POSIXct`
+
+```{r}
+# ispišite trenutni datum i vrijeme
+
+# pretvorite sljedeće znakovne nizove u vremenske oznake i ispišite ih na zaslon:
+# "2015-10-28 15:30:42"
+# "01-12-2001 14:30"   <-- oznaka očitana u New York-u, SAD, vremenska zona EST
+
+```
+
+
+***
+
+Imena vremenskih zona su standardizirana (tzv. "Olsonove vremenske zone") a dohvaćaju se uz pomoć operativnog sustava a možemo ih ispisati uz pomoć funkcije `OlsonNames()`. Trenutnu vremensku zonu platforme možemo ispisati uz pomoć funkcije `Sys.timezone()`.
+
+***
+
+## ZADATAK 10.6 - vremenske zone
+
+```{r}
+# ispišite trenutnu vremensku zonu
+
+# ispišite 10 nasumično odabranih oznaka vremenskih zona instaliranih na trenutnoj platformi
+```
+
+***
+
+Vremenske oznake također mogu koristiti operatore `+` i `-` uz cjelobrojne vrijednosti kao drugi operand pri čemu se od vremenske oznake oduzimaju ili dodaju sekunde. Isto tako, možemo oduzimati dvije vremenske oznake kako bi dobili razliku u sekundama, ili koristiti funkciju `difftime` sa odabranom vrijednosti vremenske jedinice.
+
+***
+
+## ZADATAK 10.7 - aritmetika sa vremenskim oznakama
+
+```{r}
+# ispišite koje će biti vrijeme 1000 sekundi od ovog trenutka
+
+# ispišite koliko je prošlo sati od ponoći 1.1.2015. do sad
+```
+
+
+***
+
+Klasa `POSIXlt` se ponaša isto kao i `POSIXct` (za stvaranje se koristimo funkcijom `as.POSIXlt`), no zapravo se radi o listi koja nam omogućuje jednostavno izvlačenje određenih parametara iz vremenske oznake, kao što su broj sekundi, broj minuta, dan u tjednu i sl. Sve elemente liste lako možemo vidjeti ako napravimo `POSIXlt` objekt i onda pozovemo funkciju unclass nad njim, pri čemu će se on pretvoriti u "običnu" listu. Možemo ići i korak dalje - ako listu ubacimo u funkciju unlist, kao rezultat dobivamo obični znakovni vektor.
+
+***
+
+## ZADATAK 10.8 - klasa `POSIXlt`
+
+
+```{r}
+# pretvorite sljedeći znakovni niz u vremensku oznaku tipa `POSIXlt`
+# pohranite rezultat u varijablu `t_long`
+# "1.5.2013 13:35"
+
+# ispišite broj sati i broj minuta vremenske oznake `t_long`
+# ispisom njenih atributa naziva `hour` i `min`
+
+# uklonite svojstvo liste i klasu varijabli `t_long` 
+# i ispišite ju na zaslon
+
+```
+
+
+
+
+***
+
+
+### Paket `lubridate`
+
+Iako jezik R ima relativno dobru podršku za rad sa datumima i vremenskim oznakama, upravljanje istima možemo učiniti znatno učinkovitijim uz paket lubridate. Ukoliko analiziramo podatke gdje je vremenska komponenta jako bitna, ili upravljamo podatkovnim skupovima koji koriste različite oblike zapisa datuma i vremenskih oznaka, onda si proces analize uvelike olakšavamo i ubrzavamo korištenjem funkcija iz ovog paketa.
+
+Jedna od stvari koja je možda najkorisnija programerima koji ne vole pisati oblikovne specifikacije za parsiranje datuma je porodica funkcija za parsiranje datuma čija imena odgovaraju okvirnom izgledu zapisa kojeg želimo parsirati. Npr. funkcija imena `ymd` zna parsirati znakovne nizove u kojima je datum zapisan redoslijedom godina-mjesec-dan. Funkcija je dovoljno "pametna" da sama interpetira pojedinosti oko zapisa, kao što su delimiteri, znakovna polja i sl. Ukoliko zapis ima drugi raspored dana, mjeseca i godine, potrebno je samo adekvatno razmjestiti slova u nazivu funkcije.
+
+***
+
+## ZADATAK 10.9 - funkcije paketa `lubridate` za parsiranje datuma`
+
+```{r}
+# library(lubridate)   #učitati ako je potrebno!
+
+# koristeći se funkcijama iz paketa `lubridate`
+# parsirajte  u datume i ispišite sljedeće znakovne nizove
+#  "2016-07-31"
+#  "28.2.1983."
+#  "07#31#1996"
+#  "20010830"
+
+```
+
+
+***
+
+
+Navedeni koncept može se koristiti i za vremenske oznake, samo imenu funkcije dodamo podcrtu i "specifikaciju" sati, minuta i sekundi (npr. `ymd_hms`).
+
+***
+
+## ZADATAK 10.10 - funkcije paketa `lubridate` za parsiranje vremenskih oznaka
+
+```{r}
+# koristeći se funkcijama iz paketa `lubridate`
+# parsirajte u vremenske oznake i ispišite sljedeće znakovne nizove
+# "17.5.1977. 10:15pm"
+# "20160429 10.05.17"
+
+```
+
+
+***
+
+Iako su ove funkcije paketa lubridate sposobne uspješno parsirati različite oblike datuma, uvijek je dobro provjeriti krajnji rezultat kako bi bili sigurni da nije došlo do neočekivanih rezultata (pogotovo ako radimo sa nekim iznimno egzotičnim načinima zapisa datuma i vremena).
+
+***
+
+Uočimo da ove funkcije uvijek za vremensku zonu postavljaju `UTC`. Ovo je namjerno napravljeno s ciljem da se motivira korištenje jedinstvene vremenske zone u podatkovnom skupu kojeg analiziramo. Ukoliko želimo, tijekom parsiranja možemo postaviti vremensku zonu uz pomoć parametra `tz`. Isto tako, kod već inicijaliziranih vremenskih oznaka možemo upravljati vremenskim zonama uz pomoć sljedećih funkcija
+
+- `force_tz` - "nameće" novu vremensku zonu tj. ostavlja iste vrijednosti vremenske oznake ali postavlja vremensku zonu koju definiramo
+- `with_tz` - provodi transformaciju vremenske oznake u onu koja odgovara traženoj vremenskoj zoni
+
+```{r}
+t <- ymd_hms("20161129 10.05.17", tz = "EST")
+t
+
+force_tz(t, tz = "CET")
+with_tz(t, tz = "CET")
+```
+
+***
+
+Paket lubridate također uvelike olakšava izvlačenje segmenata datuma i vremena iz vremenskih oznaka uz pomoć funkcija kao što su `year`, `week`, `month` i sl. Uz pomoć istih funkcija možemo lako i izmjeniti neku od komponenti vremena.
+
+***
+
+## ZADATAK 10.11 - izvlačenje elemenata vremenskih oznaka
+
+```{r}
+x <- dmy_hms("19.7.1996. 16:15:27")
+
+# iz gornje vremenske oznake izvucite i ispišite sate te potom minute
+
+# postavite godinu gornje vremenske oznake na 2011., a mjesec na lipanj
+
+# ispišite `x`
+```
+
+
+
+***
+
+Za potpuni popis funkcija pogledajte dokumentaciju paketa `lubridate`.
+
+Za trenutni datum i vrijeme lubridate nudi alternative funkcijama `Sys.Date()` i `Sys.time()` koje se jednostavno zovu `today()` i `now()`.
+
+***
+
+## ZADATAK 10.12 - funkcije `today` i `now`
+
+
+```{r}
+# ispišite sutrašnji datum
+
+# ispišite koliko je bilo sati, minuta i sekundi prije točno sat vremena
+
+```
+
+
+
+***
+
+Već smo rekli da upravljanje vremenskom komponentom u podacima može postati vrlo kompleksno, pogotovo ako uzmemo u obzir da vremenski intervali mogu biti zadani generički (npr. "2 godine") ili konkretno (raspon između dva datuma) te da se matematički i kalendarski način računanja vremena često ne poklapaju (npr. "za godinu dana" može značiti točan matematički izračun sekundi u 365 dana, ili kalendarski "isti datum iduće godine").
+
+Paket `lubridate` definira četiri mogućnosti kod definiranja vremena i vremenskih intervala:
+
+- trenutak (*instant*) - vremenska oznaka zaokružena na sekundu
+- trajanje (*duration*) - "generički" definiran interval u sekundama
+- period - slično trajanju, ali omogućuje definiranje trajanja koja matematički ne traju uvijek isto (npr. "3 mjeseca")
+- interval - vrijeme omeđeno između dva točno određena trenutka
+
+Trenutke smo već upoznali, to su vremenske oznake koje smo do sada stvarali. Za stvaranje trajanja i perioda imamo intuitivno definirane funkcije koje se nazivaju po engleskim nazivima za vremenske jedinice, pri čemu trajanja imaju dodano slovo d kao prefiks (od *duration*). Tako imamo funkcije `minutes` i `dminutes`, `hours` i `dhours`, `weeks` i `dweeks` i sl. (uočite da ne postoji funkcija `dmonths`, budući da "mjesec dana" ne možemo jednoznačno pretvoriti u sekunde!).
+
+***
+
+## ZADATAK 10.13 - trajanja i periodi
+
+```{r}
+# ispišite objekte koji predstavljaju trajanje i period od 3 tjedna
+
+# u varijablu `v` upišite period od 5 godina, 3 mjeseca i 2 dana
+
+# dodajte gornji period današnjem datumu
+```
+
+
+
+***
+
+Uočite da gornji izraz nismo lako mogli dobiti "matematički".
+
+Konačno, interval stvaramo uz pomoć funkcije `interval` kojoj dajemo početni i konačni trenutak, ili uz pomoć funkcije `as.interval` kojoj dajemo trajanje/period i počeni trenutak. Možemo također koristiti i operator `%--%` sa dvije vremenske oznake (tj. trenutka) kao operandima.
+
+***
+
+## ZADATAK 10.14 - intervali
+
+```{r}
+# stvorite varijablu `interval1` koja će pohraniti interval od 6 mjeseci prije današnjeg dana
+# do 6 mjeseci iza današnjeg dana
+
+# stvorite varijablu `interval2` koja će pohraniti interval od današnjeg dana
+# do datuma koji će se dogoditi za 6 mjeseci, 3 tjedna i 2 dana
+
+# stvorite varijablu `interval3` koja će pohraniti interval 
+# od 1.5.2002. do 1.7.2002.
+
+# ispišite sva tri intervala
+
+```
+
+
+
+***
+
+
+Kod intervala je zgodno što između ostalog možemo:
+
+- provjeriti da li se neki trenutak nalazi unutar nekog intervala uz pomoć operatora `%within%`
+- provjeriti da li se intervali preklapaju uz pomoć funkcije `int_overlaps()`
+- lako dohvatiti početak i kraj intervala uz pomoć funkcija `int_start()` i `int_end()`
+- "spojiti" dva intervala uz pomoć funkcije `union` ili naći presjek uz pomoć funkcije `intersect`
+- brojne druge mogućnosti koje možemo naučiti gledajući dokumentaciju
+
+***
+
+## ZADATAK 10.15 - pomoćne funkcije za rad sa intervalima
+
+```{r}
+# provjerite da li je današnji dan unutar intervala definiranog varijablom `interval1`
+
+# ukoliko se `interval1` i `interval2` preklapaju
+# ispišite njihov presjek
+
+```
+
+
+
+***
+
+U ovom dijelu upoznali smo se sa jednim dijelom funkcionalnosti koje nude klase za upravljanje datumima i vremenskim oznakama jezika R te paket `lubridate`. Za dodatne informacije pogledajte službenu dokumentaciju jezika R i paketa `lubridate`, a dobar izvor je i članak *"Dates and Times Made Easy with lubridate"* kojeg je napisao sam autor paketa Hadley Wickham a koji je dostupan na <a href = "https://www.jstatsoft.org/article/view/v040i03/v40i03.pdf">ovoj poveznici</a>.
+
+
+***
+
+```{}
+VAŽNO!!!: Za rješavanje zadataka iz domaće zadaće otvorite **zasebni RMD dokument** na vrh kojeg ćete staviti:
+---
+title: "BR LEKCIJE NASLOV LEKCIJE - DOMAĆA ZADAĆA"
+author: "JMBAG IME PREZIME" 
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+---
+
+Ispod kopirajte sve nakon naslova "# Domaća zadaća", uključujući i naslov. Rješavajte zadatke redom, stvarajući kodne blokove ispod teksta svakog zadatka prema potrebi.
+
+Nakon rješavanja domaće zadaće stvorite HTML dokument i preimenujte ga na zadani način (<JMBAG>_<RbrLekcije>_<NazivLekcije>_DZ.html). Rješenu domaću zadaću postavite u za to predviđeni repozitorij (zasebno od riješenih radnih bilježnica!).
+
+VAŽNO: U sljedećim zadacima znak XX predstavlja **zadnje dvije znamenke Vašeg JMBAG-a**. 
+
+Primjer: ako Vaš JMBAG glasi 12345678, onda XX predstavlja broj 78, 12XX predstavlja broj 1278, 2 * XX predstavlja broj 156 itd.
+
+**Prije rješavanja i predaje domaće zadaće izmijenite tekst zadatka tako da sve kombinacije znakova XX, YY i ZZ zamijenite pripadnim brojevima! U suprotnom se domaća zadaća neće uvažiti.**
+
+
+(prije predaje radne bilježnice/zadaće ove upute možete obrisati!)
+```
+
+## Domaća zadaća {-}
+
+Sljedeći zadaci odnose se na podatkovni skup pohranjen u CSV datoteci `crimeSample.csv` a koji predstavlja uzorak iz evidencije kriminalnih incidenata u gradu Philadelphiji (originalni podatkovni skup može se naći na <a href = "https://www.opendataphilly.org/dataset/crime-incidents">ovoj poveznici</a>). Originalni skup stupaca je reduciran a iz skupa svih obzervacija slučajnim odabirom uzorkovano je 1000 incidenata.
+
+Prije rješavanja zadataka učitajte podatke u podatkovni okvir crimes i upoznajte se s podatkovnim skupom (`str`, `head`, itd.)
+
+1. Pretvorite stupac sa vremenskom oznakom iz znakovnog tipa u `POSIXct` tip.
+
+2. Podatkovnom okviru dodajte sljedeće stupce: `Year`, `Month`, `Hour`. Stupce popunite odgovarajućim informacijama iz vremenske oznake. Odgovorite na pitanje: u kojem mjesecu se događa najviše zločina? Koji sat u danu je prema podacima "najopasniji"?
+
+

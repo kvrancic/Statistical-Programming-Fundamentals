@@ -1,0 +1,288 @@
+---
+output:
+  html_document: default
+---
+
+```{r setup, include = F}
+knitr::opts_chunk$set(results = 'hold')
+library(readr)
+library(tidyr)
+library(lubridate)
+```
+
+******************
+
+## OSNOVE STATISTIČKOG PROGRAMIRANJA
+#### **Fakultet elektrotehnike i računarstva, Sveučilište u Zagrebu**
+#### 27/11/2023
+
+******************
+
+# **MEĐUISPIT**  
+
+======================================================================================
+
+#### JMBAG: 36541994         
+#### Ime i prezime: Karlo Vrančić
+#### e-mail: kv54199@fer.hr       
+#### IP adresa: 86.33.69.236  
+
+
+======================================================================================
+
+#### OSNOVNE UPUTE
+
+U nastavku slijedi niz zadataka za završni ispit. Rješenja zadatka mogu uključivati **upisivanje programskog koda** ili **čistog teksta** te **izvršavanje programskog koda**. Molimo da se pridržavate sljedećih naputaka:
+
+- prije rješavanja stisnite gumb **Knit to HTML** kako bi provjerili ispravnost sučelja te dobili predložak ispita u preglednijem obliku u prozoru preglednika s desne strane
+- ukoliko nije drugačije navedeno, prostor za rješavanje zadataka sami stvarate kombinacijom tipaka **CTRL+ALT+I** ili odabirom opcija **Insert -> R**
+- pažljivo čitajte tekstove zadataka
+- tekst zadatka može sadržavati i programski kod kojeg morate izmijeniti i nadopuniti te izvršiti već prema uputama danim u tekstu zadatka i / ili komentarima postojećeg programskog koda
+- ukoliko je rješenje zadatka programski kod koji nešto ispisuje, budite sigurni da bilježnica uključuje i taj ispis
+- programski kod slobodno komentirajte
+- oznake `echo = F` i `message = F` ne mijenjajte; one služe kako konačni ispis ne bi imao nepotrebne statusne poruke
+
+Nakon ispunjavanja bilježnice odaberite opciju **Knit to HTML* i pohranite rezultat u HTML obliku u predviđeni repozitorij na *Moodle* stranicama predmeta. 
+
+Tijekom rješavanja bilježnice smijete se koristiti pomoćnim sredstvima kao što su podsjetnici, dokumentacija jezika R, bilježnice s predavanja, *Google* tražilica. **Izričito se zabranjuje razmjena informacije sa drugim polaznicima ispita bilo kojim vidom komunikacije, uključujući i elektroničku poštu, društvene mreže, chat programe ili korištenje zajedničkog dijeljenog repozitorija, kao i korištenje alata umjetne inteligencije.** 
+
+VAŽNO! Konačni HTML izvještaj **mora imati sljedeći oblik** (zamijenite JMBAG, Prezime i Ime vlastitim podacima)
+
+`JMBAG_Prezime_Ime_OSP_MI_2023.html`
+
+
+Pohranom HTML bilježnice pod Vašim korisničkim imenom i lozinkom garantirate da tijekom ove provjere znanje niste od drugoga primili niti pružili pomoć te da se niste koristili nedopuštenim sredstvima. Ove su radnje povreda Kodeksa ponašanja te mogu uzrokovati trajno isključenje s Fakulteta.
+
+
+======================================================================================
+
+## ZADACI
+
+******************
+
+**NAPOMENA** U zadacima nije dopušteno koristiti eksplicitne programske petlje!
+
+******************
+
+
+
+### 1. **(1 + 1 + 2 boda)**
+
+Stvorite sljedeće vektore i ispišite traženi podskup na zaslon:
+
+a)  vektor `kub`: (1, 27, 125, 343, 729, ..., 15625). Ispišite **cijeli vektor na zaslon**. 
+
+#### Rješenje 1a
+
+```{r}
+kub <- seq(1, 25, 2)^3
+kub
+
+```
+  
+b)  vektor `kvadrati`: (1, 1, 2, 4, 3, 9, 4, 16,  ... 100, 10000). Ispišite **zadnjih 50 elemenata**.
+
+#### Rješenje 1b
+
+```{r}
+
+# broj, njegov kvadrat, broj, njegov kvadrat itd.
+
+kvadrati <- rep(1:100, each = 2)
+kvadrati[seq(2, 200, by=2)] <- kvadrati[seq(2, 200, by=2)]^2
+
+tail(kvadrati, 50)
+
+```
+
+c) vektor `datumi.21.st`: svaki dan 21. stoljeća (od 1.1.2001. do 31.12.2100., uključive granice), **bez dana koji su u mjesecima lipanj, srpanj i kolovoz**. Ispišite **nasumično odabranih 50 elemenata**.
+
+#### Rješenje 1c
+
+```{r}
+set.seed(36541994) # otkomentirati i unijeti JMBAG bez vodećih nula!
+
+
+datumi.21.st <- seq(as.Date("2001-01-01"), as.Date("2100-12-31"), by = "day")
+#datumi.21.st <- datumi.21.st[!(format(datumi.21.st, "%m") %in% c("06", "07", "08"))]
+  # ljepše je sa lubridateom
+datumi.21.st <- datumi.21.st[month(datumi.21.st) %in% c(1:5, 9:12)]
+sample(datumi.21.st, 50)
+
+```
+
+******************
+
+### 2. **(1 + 1 + 2 boda)**
+
+Sljedeći isječak koda stvara matricu m veličine 20 * 20 i puni je nasumičnim vrijednostima. 
+
+```{r}
+set.seed(36541994) # otkomentirati i unijeti JMBAG bez vodećih nula!
+m <- matrix(sample(1:20, 400, replace = T), 20)
+```
+
+Ispišite:
+
+
+a) Vektor suma stupaca matrice:
+
+#### Rješenje 2a
+
+```{r}
+
+apply(m, 2, sum)
+
+```
+
+
+b) Matricu koja predstavlja donji desni kvadrant matrice `m`:
+
+#### Rješenje 2b
+
+```{r}
+m[((nrow(m)/2)+1):nrow(m), ((ncol(m) / 2) + 1) : ncol(m)]
+
+#m[11:20, 11:20]
+
+```
+
+c) Vektor elemenata koji predstavljaju razliku najvećeg i najmanjeg elementa svakog retka matrice `m`:
+
+#### Rješenje 2c
+
+```{r}
+
+apply(m, 1, function(x) max(x) - min(x))
+
+
+```
+
+*******************
+
+### 3. **(0.5 + 1 bod)** 
+
+Stvorite listu `l` uz pomoć sljedeće naredbe:
+
+```{r}
+set.seed(36541994) # otkomentirati i unijeti JMBAG bez vodećih nula!
+l <- list(a = 1:5, b = rep(T, F, 5), c = 2, d = 1:10000, e = list(1, runif(5)))
+```
+
+a) Ispišite **sadržaj** drugog elementa podliste `e`.
+
+#### Rješenje 3a
+
+```{r}
+
+l$e[[2]]
+
+```
+
+b) Izmijenite sljedeći programski odsječak tako da daje isti ispis bez korištenja programske petlje.
+
+```{r}
+rez <- character()
+for (i in 1:length(l)) {
+  rez[names(l)[i]] <- class(l[[i]])
+}
+rez
+```
+
+#### Rješenje 3b
+
+```{r}
+rez <- character()
+rez <- sapply(l,class)
+
+rez
+
+#višak
+#names(rez) <- names(l)
+
+
+
+```
+
+
+*******************
+
+### 4. **(1 + 1 + 2 boda)**
+
+Podatkovni skup `StarWars.csv` pohranjuje podatke o likovima fimskog serijala Star Wars. Učitajte ove podatke u podatkovni okvir `starwars`. Kratko proučite učitani okvir (u konzoli ili u programskom odsječku - u potonjem slučaju obrišite naredbe proučavanja prije predaje).
+
+```{r, echo = F, message=F}
+
+StarWars <- read_csv("StarWars.csv")
+
+```
+
+
+a) ispišite prvih 7 redaka podatkovnog okvira.
+
+#### Rješenje 4a
+
+```{r}
+
+head(StarWars, 7)
+
+```
+
+
+b) Ispišite broj smeđookih likova sa planeta Naboo.
+
+#### Rješenje 4b
+
+```{r}
+nrow(StarWars[StarWars$eye_color == "brown" & StarWars$homeworld == "Naboo",])
+
+```
+
+c) Ispišite imena i težinu svih likova teških između 70 i 80 kilograma (obje granice su uključene).
+
+NAPOMENA: Kako biste izbjegli retke sa `NA` vrijednostima, budite sigurni da gledate samo likove sa poznatom težinom.
+
+#### Rješenje 4c
+
+```{r}
+
+StarWars[StarWars$mass >= 70 & StarWars$mass <= 80 & !is.na(StarWars$mass), c("name", "mass")]
+
+```
+
+
+
+*******************
+
+
+### 5. **(1.5 bod)**
+
+Podatkovni skup `IspijenoKava.csv` pohranjuje podatke o broju ispijenih kava zaposlenika neke tvrtke. Učitajte ove podatke u podatkovni okvir `kava`. Kratko proučite učitani okvir (u konzoli ili u programskom odsječku - u potonjem slučaju obrišite naredbe proučavanja prije predaje).
+
+```{r, echo = F, message=F}
+
+kava <- read_csv("IspijenoKava.csv")
+
+```
+
+Preoblikujte ovaj podatkovni skup u varijablu istog naziva tako da odgovara principima urednih podataka. Prilagodite imena i tipove stupaca prema potrebi, a potom ispišite prvih 10 redaka novog okvira.
+
+### Rješenje 5
+
+```{r}
+
+kava <- pivot_longer(kava, 2:ncol(kava), names_to = "Datumi", values_to = "PopijenoKava", values_drop_na = TRUE)
+
+kava$Datumi <- dmy(kava$Datumi)
+kava$PopijenoKava <- as.integer(kava$PopijenoKava)
+names(kava)[1] <- "PrezimeOsobe"
+head(kava, 10)
+
+
+```
+
+
+
+### KRAJ (ne brisati!)
+
+

@@ -1,0 +1,88 @@
+---
+title: "4 Podatkovni okviri i faktori - DOMAĆA ZADAĆA"
+author: "36541994 Karlo Vrančić" 
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(results = 'hold')
+```
+
+
+# Domaća zadaća
+
+
+1. U mapi zajedno sa ovom bilježnicom pronađite datoteku `mjestoNOHEADER.csv` koja predstavlja datoteku istovjetnu datoteci `mjesto.csv` osim sljedećih značajki:
+
+- nedostaju imena stupaca
+- korišten je razmak kao razdvojnik
+
+Pokušajte uz pomoć dokumentacije učitati podatke iz ove datoteke u varijablu `mjestoNH` koja će biti istovjetna varijabli `mjesto` korištenoj u lekciji.
+
+```{r}
+
+mjestoNH <- read.csv("mjestoNOHEADER.csv", sep = " ", header = F)
+
+# da bi bili istovjetni, moramo dodati imena stupaca 
+colnames(mjestoNH) <- c("pbr","nazivMjesta","prosjPlacaKn", "brojStanovnika","prirez")
+
+
+```
+
+2. U mapi zajedno sa ovom bilježnicom pronađite datoteku `racun.csv` i učitajte ju u varijablu `racun`. Pripazite da nizovi znakova nisu automatski pretvoreni u faktore. Ispišite na zaslon:
+
+- broj redaka ove tablice
+- broj stupaca tablice
+- imena stupaca tablice
+
+```{r}
+
+racun <- read.csv("racun.csv", stringsAsFactors = FALSE)
+nrow(racun)
+ncol(racun)
+colnames(racun)
+
+
+```
+
+3. Za tablicu `racun` napravite sljedeće:
+
+- faktorizirajte stupac `katArtikl`
+```{r}
+
+racun$katArtikl <- as.factor(racun$katArtikl)
+
+
+```
+- ispišite šifru, naziv i cijenu svih artikala kategorije "slatkisi i grickalice" jeftinijih od 94 Kn
+```{r}
+
+racun[racun$cijena < 94 & racun$katArtikl == "slatkisi i grickalice", c("sifArtikl","nazArtikl","cijena")]
+
+
+```
+- ispišite koliko proizvoda koje kategorije se nalazi u računu
+```{r}
+
+table(racun$katArtikl)
+
+
+```
+- dodajte stupac ukupno koji će sadržavati ukupnu cijenu pojedine stavke uračunavajući i cijenu i količinu
+```{r}
+
+racun$ukupnoStavka <- racun$cijena * racun$kolicina
+
+
+```
+- izračunajte ukupni iznos računa
+```{r}
+
+ukupanIznos <- sum(racun$ukupnoStavka)
+ukupanIznos
+
+```

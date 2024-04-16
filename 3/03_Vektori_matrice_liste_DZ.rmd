@@ -1,0 +1,91 @@
+---
+title: "3 Vektori, matrice i liste - DOMAĆA ZADAĆA"
+author: "36541994 Karlo Vrančić" 
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(results = 'hold')
+```
+
+
+# Domaća zadaća
+
+1.  Stvorite i ispišite na zaslon sljedeće vektore:
+
+-   (11, 12, 13,..., 94), gdje je 94 = max(94,54)
+```{r}
+11:94
+```
+-   (0, 0, 0, 0, ... , 0) (94 nula)
+```{r}
+rep(0, times = 94)
+```
+-   (0, 0.1, 0.2, ...., 1.0)
+```{r}
+seq(0, 1, by=0.1)
+```
+
+2.  Kolika je suma svih brojeva od 101 do 10 \* 94, ako preskočimo sve brojeve djeljive sa 10? Koristite se funkcijom `sum`.
+```{r}
+brojevi <- 101:(10 * 94)
+sumBezDjeljivihSa10 <- sum(brojevi[brojevi %% 10 != 0])
+sumBezDjeljivihSa10
+```
+
+3.  Stvorite matricu 3 x 3 sa brojevima izvođenjem sljedećih naredbi (funkciju `sample` ćemo pobliže upoznati u jednoj od sljedećih lekcija):
+
+```{r}
+# stvaramo matricu 3x3 nasumično odabranih elemenata iz skupa od 1 do 100
+set.seed(94)  # prije rješavanja otkomentirajte ovu naredbu i zamijenite XX prema naputku
+m <- matrix(c(sample(1:100, 9, T)), nrow = 3, ncol = 3, byrow = T)
+m_inv <- solve(m)
+m
+m_inv
+m %*% m_inv # rezultat nije idealan zbog zaokruzivanja, ali to je to 
+
+```
+
+Izračunajte inverznu matricu uz pomoć funkcije `solve`. Provjerite da li umnožak originalne i inverzne matrice daje jediničnu matricu (za množenje matrica koristite se operatorom `%*%`).
+
+4.  Inicijalizirajte ponovo listu `svastara` korištenu u lekciji. Napravite sljedeće:
+
+```{r}
+svastara <- list(brojevi = 1:3,
+                 slova = c("A", "B"),
+                 c(T,F),
+                 imena = c("Ivo", "Ana"))
+
+```
+
+-   ispišite klasu drugog elementa liste
+```{r}
+class(svastara[[2]]) # nejasno je trebali li ispisati "originalnu" klasu ili samo class(svastara[2]) sto ce rezultirati listom jer su svi elementi liste u R-u "male liste"
+```
+-   ispišite element na trećem mjestu elementa liste naziva `slova`
+```{r}
+svastara$slova[3] # ne postoji treći element
+```
+-   provjerite duljinu elementa naziva `imena` te na zadnje mjesto dodajte ime `"Pero"`
+```{r}
+length(svastara$imena)
+svastara$imena <- c(svastara$imena, "Pero") # na ovaj način očuvamo stara imena
+svastara$imena
+```
+
+-   provjerite da li se broj `4` nalazi u prvom elementu liste
+```{r}
+4 %in% svastara[[1]]
+```
+-   na zadnje mjesto liste dodajte novu listu sa tri vektora `a`, `b` i `c` koji svi sadrže elemente (1,2,3)
+```{r}
+novaListica <- list(a = 1:3, b = 1:3, c = 1:3)
+svastara$novaListica <- novaListica
+svastara
+```
+
+------------------------------------------------------------------------

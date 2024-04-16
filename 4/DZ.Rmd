@@ -1,0 +1,64 @@
+---
+title: "3 Vektori, matrice i liste - DOMAĆA ZADAĆA"
+author: "36541994 Karlo Vrančić" 
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+---
+
+```         
+Ispod kopirajte sve nakon naslova "# Domaća zadaća", uključujući i naslov. Rješavajte zadatke redom, stvarajući kodne blokove ispod teksta svakog zadatka prema potrebi.
+
+Nakon rješavanja domaće zadaće stvorite HTML dokument i preimenujte ga na zadani način (<JMBAG>_<RbrLekcije>_<NazivLekcije>_DZ.html). Rješenu domaću zadaću postavite u za to predviđeni repozitorij (zasebno od riješenih radnih bilježnica!).
+
+VAŽNO: U sljedećim zadacima znak XX predstavlja **zadnje dvije znamenke Vašeg JMBAG-a**. 
+
+Primjer: ako Vaš JMBAG glasi 12345678, onda XX predstavlja broj 78, 12XX predstavlja broj 1278, 2 * XX predstavlja broj 156 itd.
+
+**Prije rješavanja i predaje domaće zadaće izmijenite tekst zadatka tako da sve kombinacije znakova XX, YY i ZZ zamijenite pripadnim brojevima! U suprotnom se domaća zadaća neće uvažiti.**
+
+
+(prije predaje radne bilježnice/zadaće ove upute možete obrisati!)
+```
+
+# Domaća zadaća
+
+1.  Stvorite i ispišite na zaslon sljedeće vektore:
+
+-   (11, 12, 13,..., 94), gdje je 94 = max(94,54)
+```{r}
+11:94
+```
+-   (0, 0, 0, 0, ... , 0) (94 nula)
+```{r}
+rep(0, times = 94)
+```
+-   (0, 0.1, 0.2, ...., 1.0)
+```{r}
+seq(0, 1, by=0.1)
+```
+
+2.  Kolika je suma svih brojeva od 101 do 10 \* 94, ako preskočimo sve brojeve djeljive sa 10? Koristite se funkcijom `sum`.
+```{r}
+10 * 94 
+```
+
+3.  Stvorite matricu 3 x 3 sa brojevima izvođenjem sljedećih naredbi (funkciju `sample` ćemo pobliže upoznati u jednoj od sljedećih lekcija):
+
+```{r}
+# stvaramo matricu 3x3 nasumično odabranih elemenata iz skupa od 1 do 100
+#set.seed(XX)  # prije rješavanja otkomentirajte ovu naredbu i zamijenite XX prema naputku
+m <- matrix(c(sample(1:100, 9, T)), nrow = 3, ncol = 3, byrow = T)
+```
+
+Izračunajte inverznu matricu uz pomoć funkcije `solve`. Provjerite da li umnožak originalne i inverzne matrice daje jediničnu matricu (za množenje matrica koristite se operatorom `%*%`).
+
+4.  Inicijalizirajte ponovo listu `svastara` korištenu u lekciji. Napravite sljedeće:
+
+-   ispišite klasu drugog elementa liste
+-   ispišite element na trećem mjestu elementa liste naziva `slova`
+-   provjerite duljinu elementa naziva `imena` te na zadnje mjesto dodajte ime `"Pero"`
+-   provjerite da li se broj `4` nalazi u prvom elementu liste
+-   na zadnje mjesto liste dodajte novu listu sa tri vektora `a`, `b` i `c` koji svi sadrže elemente (1,2,3)
+
+------------------------------------------------------------------------

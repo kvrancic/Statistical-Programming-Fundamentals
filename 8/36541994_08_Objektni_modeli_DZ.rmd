@@ -1,0 +1,63 @@
+---
+title: "8 Objektni modeli - DOMAĆA ZADAĆA"
+author: "36541994 Karlo Vrančić"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+```{r include=FALSE}
+library(magrittr)
+library(tidyr)
+library(readr)
+library(dplyr)
+library(lubridate)
+knitr::opts_chunk$set(results = 'hold')
+```
+
+# Domaća zadaća
+
+1. Stvorite objekt klase `Kvadar` sa atributima `visina`, `sirina` i `dubina` i prilagođenim ispisom preko funkcije `print`. Demonstrirajte stvaranje i ispis objekta preko objektnog tipa S3 te objektnog tipa S4.
+
+
+```{r}
+# S3 - koristimo konstruktor, u biti mogli smo i bez 
+
+Kvadar <- function(visina, sirina, dubina){
+  stopifnot(is.numeric(visina) && visina > 0)
+  stopifnot(is.numeric(sirina) && sirina > 0)
+  stopifnot(is.numeric(dubina) && dubina > 0)
+  
+  objekt <- list(visina = visina, sirina = sirina, dubina = dubina)
+  class(objekt) = "Kvadar"
+  
+  objekt
+}
+
+kocka <- Kvadar(10, 10, 10)
+
+print.Kvadar <- function(objekt){
+  rez <- paste0("Kvadar je dimenzija: ", objekt$visina, " visina, ", objekt$sirina, " sirina, ", objekt$dubina, " dubina\n")
+  cat(rez)
+}
+
+print(kocka)
+
+#S4 
+
+setClass("Kvadar2", representation(visina="numeric",
+                                  sirina="numeric",
+                                  dubina="numeric"))
+nepravilna_kocka <- new("Kvadar2", dubina = 10,
+                       sirina = 8, 
+                       visina = 12)
+
+setMethod("print",
+          signature(x = "Kvadar2"),
+          function(x){
+            rez <- paste0("Visina:", x@visina, ", Sirina:", x@sirina, ", Dubina:", x@dubina, "\n")
+            cat(rez)
+          })
+print(nepravilna_kocka)
+```
+

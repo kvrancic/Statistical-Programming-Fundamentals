@@ -1,0 +1,228 @@
+---
+title: "11 Obrada znakovnih nizova - RB"
+author: "36541994 Karlo Vrančić"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(lubridate)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(results = 'hold')
+```
+
+***
+
+## Rad sa znakovnim nizovima
+
+*R* ima jako dobru podršku za rad sa znakovnim nizovima, no funkcije koje nudi osnovni R nisu intuitivne niti konzistentne ako ih uspoređujemo sa sličnim funkcijama u drugim programskim jezicima. 
+
+Upravo iz ovih razloga pojavio se paket `stringr` koji nudi vrlo učinkovitu alternativu postojećim funkcijama vezanih uz znakovne nizove te predstavlja jedan od najpopularnijih "dodatnih" R paketa. No prije upoznavanja sa funkcijama koje nudi ovaj paket potrebno je kratko se osvrnuti na općenitu problematiku upravljanja znakovnim nizovima u analizi podataka te na tehnologiju bez koje je provedba analize znakovnih nizova gotovo nezamisliva - tzv. regularni izrazi.
+
+### Analiza teksta i regularni izrazi
+
+
+Sljedeća tablica daje kratki pregled nekih češće korištenih elemenata regularnih izraza u jeziku *R*:
+
+
+Element  | 	Značenje
+------|-----------------------
+`abcd` | 	niz slova "abcd"
+`1234` | 	niz znamenki "1234"
+`\\d` ili `[:digit:]`  | ili `[0-9]`	bilo koja znamenka
+`\\D` ili `[:alpha:]` |  ili `[A-Za-z]`	bilo koje slovo
+`[:alnum:]`	 | bilo koje slovo ili znamenka
+`.`	 | bilo koji znak
+`\\.`	 | točka
+`[abc]` | 	samo navedeni znakovi
+`[^abc]` | 	svi znakovi osim navedenih
+`*`	 | nula ili više ponavljanja
+`+`	 | jedno ili više ponavljanja
+`{n}`	 | točno n ponavljanja
+`{m, n}`	 | najmanje m, najviše n ponavljanja
+`?`	 | opcionalni znak
+`[:space:]` ili `\\s` | 	bilo kakva praznina
+`[:punct:]`	 | znakovi interpunkcije
+`^...$`	 | oznaka za početak i kraj
+`(....)`	 | izdvajanje dijela izraza (za daljnju obradu)
+`(ab|cd)`	 | niz "ab" ili niz "cd"
+
+Uočite da kod korištenja specijalnog znaka `\` zapravo moramo koristiti "dvostruki znak" `\\` (prvi put da naznačimo *R*-u da se radi o specijalnom znaku, drugi put da ga doslovno upotrijebimo kao dio regularnog izraza).
+
+Osnovne funkcije jezika *R* za rad sa znakovnim nizovima (a time i regularnim izrazima) su između ostalog `grep`, `grepl`, `regexrp`, `gregexrp`, `regmatches`, `sub`, `gsub` itd. No budući da paket stringr nudi skup alternativnih funkcija sa gotovo istim funkcionalnostima ali uz daleko intuitivnija imena i konzistentnije potpise, mi ćemo se usredotočiti na upravo te funkcije a učenje osnovnih ostavljamo čitateljima koji žele upotpuniti svoje znanje učenjem svih dostupnih alata koje nudi jezik *R*.
+
+### Paket `stringr`
+
+
+
+Možemo početi sa nekim jednostavnijim funkcijama za koje ne trebamo regularne izraze (navodimo pojednostavljene potpise funkcija, za potpune pogledajte dokumentaciju):
+
+- `str_c(string1, string2, ...)` - spajanje znakovnih nizova, alternativa funkciji paste0
+- `str_length(string)` - vraća duljinu znakovnog niza
+- `str_sub(string, start, end)` - vraća podniz
+- `str_sub(string, start, end) <- string2` - umetanje novog podniza (ne mora biti iste duljine kao izbačeni podniz!)
+- `str_trim(string)` - uklanjanje praznina s početka i kraja niza
+
+
+***
+
+## ZADATAK 11.1 - osnovne funkcije za rad sa znakovnim nizovima
+
+
+```{r}
+niz1 <- "        Ovo je primjer "
+niz2 <- "spajanja nizova!       "
+
+# uz pomoć jedne naredbe spojite gornje nizove, potom
+# iz rezultata uklonite praznine s početka i kraja niza,
+# zatim izdvojite podniz od 8. do 23. znaka te konačni rezultat ispišite na zaslon
+
+str_c(niz1, niz2) %>% str_trim() %>% str_sub(8, 23)
+
+niz <- "R je pretjerano kompliciran i nimalo lagan jezik!"
+
+# u gornjem nizu znakova zamjenite sve od 9. znaka (brojeno od početka)
+# do 13. (brojeno od kraja) sa praznim nizom 
+str_sub(niz, 9, -13) <- ""
+
+# ispišite niz
+niz
+
+```
+
+***
+
+
+Funkcija `str_c` ima i parametar sep za dodavanje separatora, te parametar collapse za spajanje elemenata znakovnog vetora u jedinstveni niz uz vrijednost parametra kao separator.
+
+
+***
+
+## ZADATAK 11.2 - spajanje znakovnih nizova
+
+
+```{r}
+
+niz1 <- "Za spajanje"
+niz2 <- "ovih nizova"
+niz3 <- "potreban je razmak!"
+
+# spojite gornje nizove u jedinstveni niz i ispišite rezultat
+str_c(niz2, niz2, niz3, sep = " ")
+
+nizovi <- c("A", "ovi", "nizovi", "su", "elementi", "vektora...")
+
+# spojite elemente gornjeg vektora u jedan niz i ispišite rezultat
+str_c(nizovi, collapse = " ")
+
+
+```
+
+
+
+***
+
+Pogledajmo sada neke funkcije koje rade sa regularnim izrazima:
+
+- `str_detect(string, pattern)` - vraća `TRUE` ako niz sadrži uzorak, inače `FALSE`
+- `str_extract(string, pattern)` - vraća niz znakova koji odgovara prvoj pojavi uzorka
+- `str_extract_all(string, pattern)` - vraća listu sa svim pojavama koje odgovaraju uzorku
+- `str_replace(string, pattern, replacement)` - mijenja prvu pojavu uzorka sa zadanim novim nizom
+- `str_replace_all(string, pattern, replacement)` - mijenja sve pojave uzorka sa zadanim novim nizom
+
+Sve ove funkcije su vektorizirane, tj. ponašaju se logično (tj. "paralelizirano") kad im kao određeni parametar pošaljemo vektor - npr. ako funkciji str_replace pošaljemo vektor znakovnih nizova i vektor "zamjena", svaka prva pojava uzorka biti će zamjenjena odgovarajućim elementom u poretku zamjena. Za detalje oko ovakvog proširenog korištenja uputno je pogledati dokumentaciju.
+
+***
+
+## ZADATAK 11.3 - funkcije i regularni izrazi
+
+```{r}
+adrese <- c("pero.peric@fer.hr", "iva.ivic@etfos.hr", "ppetrovic@gmail.com", 
+            "branko1987@yahoo.com", "jaRULZ4EVR@gmail.nz", "dperkovic@efzg.hr", 
+            "lalaic1998@gmail.co.uk", "perica.markic@fer.hr")
+
+# prebrojite i ispišite koliko u gornjem popisu ima mail adresa iz domene `fer.hr`
+sum(str_detect(adrese, "@fer\\.hr"))
+
+# ispišite sve adrese koje sadrže bar jednu znamenku
+adrese[str_detect(adrese, "[:digit:]")]
+
+# ispišite sve adrese koje na drugom mjestu imaju samoglasnik
+adrese[str_detect(str_sub(adrese, 2,2), "[aeiouaeiou]")]
+
+# ispišite sve jedinstvene domene adresa elektroničke pošte iz gornjeg niza adresa
+# (domenom smatramo dio adrese iza znaka `@`)
+str_match(adrese, '@(.*)')[,2] %>% unique
+
+# anonomizirajte gornje adrese: niz znakova ispred znaka '@'
+# zamijenite nasumičnim šesteroznamenkastim prirodnim brojem 
+sample(100000:999999, length(adrese)) %>% as.character %>% str_replace(adrese, "^[^@]*", .)
+
+```
+
+
+***
+
+
+Konačno, naučimo jednu relativno korisnu funkciju nazvanu `str_split`. Ova funkcija rastavlja znakovni niz na vektor znakovnih nizova, ovisno o danom separatoru (koji može biti razmak, neki odabrani znak ali i regularni izraz), a često se koristi kao "primitivnija" alternativa funkcijama `read.csv` i `read.table` kada ulazne podatke želimo "ručno" rastaviti i parsirati, ili za analizu teksta kada paragrafe teksta "razbijamo" na pojedinačne riječi. Ova funkcija pretpostavlja da ćemo joj proslijediti niz znakovnih nizova za rastavljanje te nam kao rezultat vraća listu; ukoliko rastavljamo samo jedan niz, lako rezultat pretvaramo u vektor korištenjem funkcije unlist.
+
+## Jednostavna analiza teksta
+
+
+Pokažimo sada jedan vrlo jednostavni primjer analize teksta. Izračunati ćemo frekvenciju pojave različitih u riječi u sljedećem paragrafu teksta. Za potrebe ovog zadatka morati ćemo pročitati podatke iz tekstualne datoteke. Jedan od najjednostavnijih načina kako ovo možemo učiniti jest kombinacija funkcija `file` (koja otvara konekciju prema tekstualnoj datoteci, slično načinu upravljanja datotekama u C-u) i `readLines` koja čita određeni broj redaka iz datoteke i sprema ih u znakovni vektor. Ako je datoteka dovoljno mala da sve retke možemo čitati odjednom, onda ove dvije funkcije možemo pozvati ovako:
+
+```{r, eval = F}
+con <- file("datoteka.txt", "r")    # r = "read"
+rows <- readLines(con)   # ili readLines(con, n = 100) za čitanje samo određenog broja redaka
+close(con)   # zatvaranje toka
+
+```
+
+Sljedeći zadatak koristiti će dvije tekstualne datoteke
+
+- `HobbitChapterOne.txt` - datoteka čiji tekst analiziramo i 
+- `stopwords.txt` - datoteka sa čestim riječima koje "nisu vrijedne" za analizu koju ćemo izvesti
+
+
+## ZADATAK 11.4 - jednostavna analiza teksta
+
+```{r}
+# u varijablu `hobbit` učitajte tekst iz datoteke `HobbitChapterOne.txt`
+# a u varijablu `stopwords` stop riječi iz datoteke `stopwords.txt`
+con <- file("HobbitChapterOne.txt", "r")    
+hobbit <- readLines(con)   
+close(con)
+
+con <- file("stopwords.txt", "r")    
+stopwords <- readLines(con)   
+close(con)
+
+
+# provedite sljedeće korake:
+# - spojite sve elemente iz varijable `hobbit` u jedan jedinstveni znakovni niz
+hobbit <- str_c(hobbit, collapse = " ") 
+# - uklonite interpunkcijske znakove iz teksta
+hobbit <- str_replace_all(hobbit, "[:punct:]", "")
+# - prebacite tekst u "lowercase" (funkcija `tolower`)
+hobbit <- tolower(hobbit)
+# - rastavite tekst na riječi po prazninama
+hobbit <- str_split(hobbit, "[:space:]")
+hobbit <- unlist(hobbit)
+# - izbacite "prazne" riječi (riječi duljine 0) ako ih ima
+# - izbacite sve riječi koje se nalaze u vektoru `stopwords` 
+hobbit <- hobbit[!(hobbit %in% stopwords | nchar(hobbit) == 0)]
+# - izračunajte frekvencije riječi
+freq <- table(hobbit) %>% sort(decreasing = T)
+# - ispišite na zaslon 20 najčešće korištenih riječi
+freq[1:20]
+
+```
+
+
+
+
+
+
+

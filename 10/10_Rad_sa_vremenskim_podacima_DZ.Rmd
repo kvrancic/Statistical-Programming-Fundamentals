@@ -1,0 +1,57 @@
+---
+title: "10 Rad sa datumima i znakovnim nizovima - ZADAĆA"
+author: "36541994 Karlo Vrančić"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+```{r include=FALSE}
+library(magrittr)
+library(tidyr)
+library(readr)
+library(dplyr)
+library(lubridate)
+knitr::opts_chunk$set(results = 'hold')
+```
+
+## Domaća zadaća {-}
+
+Sljedeći zadaci odnose se na podatkovni skup pohranjen u CSV datoteci `crimeSample.csv` a koji predstavlja uzorak iz evidencije kriminalnih incidenata u gradu Philadelphiji (originalni podatkovni skup može se naći na <a href = "https://www.opendataphilly.org/dataset/crime-incidents">ovoj poveznici</a>). Originalni skup stupaca je reduciran a iz skupa svih obzervacija slučajnim odabirom uzorkovano je 1000 incidenata.
+
+Prije rješavanja zadataka učitajte podatke u podatkovni okvir crimes i upoznajte se s podatkovnim skupom (`str`, `head`, itd.)
+
+1. Pretvorite stupac sa vremenskom oznakom iz znakovnog tipa u `POSIXct` tip.
+
+```{r}
+
+crimes <- read_csv("crimeSample.csv")
+str(crimes)
+head(crimes)
+
+
+crimes$Dispatch_Date_Time <- as.POSIXct(crimes$Dispatch_Date_Time, format = "%Y-%m-%d %H:%M:%S")
+
+
+```
+
+2. Podatkovnom okviru dodajte sljedeće stupce: `Year`, `Month`, `Hour`. Stupce popunite odgovarajućim informacijama iz vremenske oznake. Odgovorite na pitanje: u kojem mjesecu se događa najviše zločina? Koji sat u danu je prema podacima "najopasniji"?
+
+```{r}
+
+crimes$Year <- year(crimes$Dispatch_Date_Time)
+crimes$Month <- month(crimes$Dispatch_Date_Time)
+crimes$Hour <- hour(crimes$Dispatch_Date_Time)
+
+head(crimes)
+
+most_crimes_month <- names(sort(table(crimes$Month), decreasing = TRUE))[1]
+most_dangerous_hour <- names(sort(table(crimes$Hour), decreasing = TRUE))[1]
+
+head(crimes)
+
+print(paste("Najopasniji mjesec je", most_crimes_month))
+
+print(paste("Najopasniji sat je", most_dangerous_hour))
+
+```

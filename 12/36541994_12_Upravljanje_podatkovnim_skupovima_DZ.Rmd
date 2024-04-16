@@ -1,0 +1,93 @@
+---
+title: "12 Upravljanje podatkovnim skupovima - ZADAĆA"
+author: "36541994 Karlo Vrančić"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(readr)
+library(stringr)
+library(hflights)
+library(tidyr)
+library(lubridate)
+knitr::opts_chunk$set(results = 'hold')
+```
+
+***
+
+## Domaća zadaća {-}
+
+U zadacima za vježbu poslužiti ćemo se proširenom podatkovnim skupom *mammals sleep* dostupnim u vizualizacijskom paketu `ggplot2`. Učitajte paket `ggplot2` te potom prenesite podatkovni okvir `msleep` u globalnu okolinu uz pomoć funkcije `data`.
+```{r}
+library(ggplot2)
+data(msleep)
+```
+
+Prije rješavanja učitajte podatkovni skup i upoznajte se s njim uz pomoć uobičajenih funkcija.
+```{r}
+msleep <- as_tibble(msleep)
+
+str(msleep)
+glimpse(msleep)
+head(msleep)
+?msleep
+```
+
+1. Za 10 biljojeda koji najdulje spavaju ispišite ime, koliko dnevno spavaju i prosječnu tjelesnu, težinu u kg. Ispis poredajte po duljini spavanja silazno.
+```{r}
+# Za 10 biljojeda koji najdulje spavaju ispišite ime, koliko dnevno spavaju i prosječnu tjelesnu, težinu u kg. Ispis poredajte po duljini spavanja silazno.
+
+msleep %>% filter(vore == "carni") %>% top_n(10, sleep_total) %>% transmute(name, asleep = 24 - awake, bodywt) %>% arrange(desc(asleep))
+
+
+```
+
+
+2. Ispišite prosječno, najdulje i najkraće vrijeme spavanja životinja ovisno o njihovom tipu prehrane.
+```{r}
+
+msleep %>% group_by(vore) %>% summarize(avg = mean(sleep_total), minSleep = min(sleep_total), maxSleep = max(sleep_total))
+
+```
+
+3. Podijelite ukupno vrijeme spavanja u 5 razreda jednoliko po ukupnoj duljini dnevnog spavanja. Za svaki razred ispišite ukupan broj životinja koje pripadaju razredu, a potom posebno ukupan broj pripadnika razreda koji nisu biljojedi. Ispis poredajte od razreda životinja koje najmanje spavaju naviše. Stupce nazovite smisleno i pripazite da konačna tablica nema NA vrijednosti.
+```{r}
+# Podijelite ukupno vrijeme spavanja u 5 razreda jednoliko po ukupnoj duljini dnevnog spavanja. Za svaki razred ispišite ukupan broj životinja koje pripadaju razredu, a potom posebno ukupan broj pripadnika razreda koji nisu biljojedi. Ispis poredajte od razreda životinja koje najmanje spavaju naviše. Stupce nazovite smisleno i pripazite da konačna tablica nema NA vrijednosti.
+
+msleep %>% mutate(sleep_totalClass = ntile(sleep_total, 5)) %>% group_by(sleep_totalClass) %>% summarize( total = n(), nonHerbivores = sum(vore != "herbi", na.rm = TRUE)) %>% arrange(sleep_totalClass)
+
+
+
+```
+
+
+
+4. Sljedeći okvir sadrži šifre statusa očuvanja životinja i njihove opise:
+
+```{r}
+conservationStatus <- data.frame( 
+  code = c("ex", "ew", "cr", "en", "vu", "nt", "cd", "lc"),
+  description = c("extinct", "extinct in the wild", 
+                 "critically endangered", "endangered",
+                 "vulnerable", "near threatened", 
+                 "conservation dependent", "least concern"))
+
+
+glimpse(conservationStatus)
+head(conservationStatus)
+
+```
+
+Dodajte okviru `msleep` stupac `conservationDesc` koji će sadržavati pripadajuće opise preuzete iz gornjeg okvira. Pripazite da kod proširenja ne izgubite nijedan redak iz okvira `msleep`.
+```{r}
+# Dodajte okviru msleep stupac conservationDesc koji će sadržavati pripadajuće opise preuzete iz gornjeg okvira. Pripazite da kod proširenja ne izgubite nijedan redak iz okvira msleep.
+
+msleep <- left_join(msleep, conservationStatus, by = c("conservation" = "code"))
+
+msleep
+
+```
+
+

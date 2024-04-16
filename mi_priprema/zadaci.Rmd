@@ -1,0 +1,1069 @@
+---
+title: "vjezba za MI"
+author: "36541994 Vrančić Karlo"
+date: "2023-11-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(GGally)
+library(magrittr)
+library(tidyr)
+library(readr)
+library(dplyr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Zadatak 3.12 - uvjetno referenciranje (2)
+```{r}
+y <- sample(1:100, 20) # nasumicni odabir 20 elemenata izmedju 1 i 100
+studenti <- c("Ivo", "Petra", "Marijana", "Ana", "Tomislav", "Tin")
+
+# ispišite vektor koji sadrži sve parne, a potom sve neparne elemente vektora `y`
+x <- c(y[y %% 2 == 0], y[y %% 2 == 1])
+x
+
+# ispišite sve elemente vektora `studenti` koji predstavljaju imena od 3 slova
+studenti[nchar(studenti) == 3]
+
+# (napomena: za prebrojavanje slova znakovnog niza u R-u koristimo funkciju `nchar`)
+
+
+
+```
+
+
+## Zadatak 3.14 - funkcija `matrix`
+
+```{r}
+x <- 1:12
+
+# uz pomoć funkcije `matrix` stvorite matricu sa 3 retka i 4 stupca
+# koja sadrži elemente vektora `x`
+# ispišite rezultat na zaslon
+matrix(x, nrow = 3, ncol = 4)
+
+# ponovite postupak ali pozivu funkcije dodajte parametar `byrow = T`
+matrix(x, nrow = 3, ncol = 4, byrow = T)
+
+# ispišite rezultat na zaslon i usporedite s prethodnim rezultatom
+
+```
+
+## Zadatak 3.15 - funkcija `dim`
+```{r}
+m <- 1:10
+
+# ispišite rezultat poziva funkcije `dim` nad vektorom `m`
+dim(m)
+
+# pozivu funkcije `dim` nad vektorom `m` pridružite vektor c(2, 5)
+dim(m) <- c(2,5)
+
+# ispišite `m` i komentirajte rezultat
+m
+
+# ispišite rezultate poziva funkcija `nrow` i `ncol` nad matricom `m`
+nrow(m)
+ncol(m)
+```
+
+
+## Zadatak 3.16 - funkcije `rbind` i `cbind`
+
+```{r}
+a <- 1:4
+b <- 5:8
+c <- c(0,0)
+
+# stvorite matricu `m` u kojoj će vektori `a` i `b` biti stupci
+m <- cbind(a, b)
+m
+
+# dodajte novi redak na vrh matrice `m` sa elementima vektora `c`
+# ispišite matricu `m`
+m <- rbind(c, m)
+m
+
+```
+
+## Zadatak 3.17 - rezanje matrica
+
+```{r}
+m <- matrix(1:30, 6, 5, T)
+colnames(m) <- c("a", "b", "c", "d", "e")
+
+# ispišite sve elemente matrice m od drugog do četvrtog retka
+# te od trećeg do petog stupca
+m[2:4, 3:5]
+
+# sve elemente u stupcu naziva "c" postavite na nulu
+# a potom ispišite prva dva retka matrice `m`
+m[1:2, ]
+
+m[, "c"] <- 0
+
+m[1:2, ]
+
+# ispišite samo stupac "d"
+m[, "d"]
+
+# ispišite opet stupac "d", ali kod referenciranja dodajte parametar `drop = FALSE`
+# parametar odvojite zarezom (kao da se radi o "trećoj" dimenziji referenciranja)
+m[, "d", drop = FALSE]
+
+
+```
+
+
+1. Stvorite i ispišite na zaslon sljedeće vektore:
+
+- (11, 12, 13,..., YY), gdje je YY = max(XX,54)
+- (0, 0, 0, 0, ... , 0)   (XX nula) 
+- (0, 0.1, 0.2, ...., 1.0)
+
+```{r}
+
+x <- c(11:54)
+x
+x <- rep(0, 94)
+x
+x <- seq(0, 1, 0.1)
+x
+
+```
+
+2. Kolika je suma svih brojeva od 101 do 10 * XX, ako preskočimo sve brojeve djeljive sa 10? Koristite se funkcijom `sum`.
+```{r}
+
+x <- seq(101, 10*94, 1)
+x <- x[x %% 10 != 0]
+x
+
+```
+
+3. Stvorite matricu 3 x 3 sa brojevima izvođenjem sljedećih naredbi (funkciju `sample` ćemo pobliže upoznati u jednoj od sljedećih lekcija):
+
+```{r}
+# stvaramo matricu 3x3 nasumično odabranih elemenata iz skupa od 1 do 100
+#set.seed(XX)  # prije rješavanja otkomentirajte ovu naredbu i zamijenite XX prema naputku
+m <- matrix(c(sample(1:100, 9, T)), nrow = 3, ncol = 3, byrow = T)
+m
+```
+
+
+4. Inicijalizirajte ponovo listu `svastara` korištenu u lekciji. Napravite sljedeće:
+
+- ispišite klasu drugog elementa liste
+- ispišite element na trećem mjestu elementa liste naziva `slova`
+- provjerite duljinu elementa naziva `imena` te na zadnje mjesto dodajte ime `"Pero"`
+- provjerite da li se broj `4` nalazi u prvom elementu liste
+- na zadnje mjesto liste dodajte novu listu sa tri vektora `a`, `b` i `c` koji svi sadrže elemente (1,2,3)
+
+```{r}
+
+# stvorite novu listu naziva `svastara` koja će imati sljedeće elemente
+#      element naziva `brojevi` sa cijelim brojevima od 1 do 3
+#      element naziva `slova` sa slovima "A" i "B"
+#      bezimeni element sa logičkim vektorom `c(T,F)`
+#      element naziva `imena` sa imenima "Ivo" i "Ana"
+
+svastara <- list(
+  "brojevi" = 1:3,
+  "slova" = c("A", "B"),
+  c(T,F),
+  "imena" = c("Ivo", "Ana")
+)
+
+svastara
+```
+
+# Domaća zadaća
+
+
+1. U mapi zajedno sa ovom bilježnicom pronađite datoteku `mjestoNOHEADER.csv` koja predstavlja datoteku istovjetnu datoteci `mjesto.csv` osim sljedećih značajki:
+
+- nedostaju imena stupaca
+- korišten je razmak kao razdvojnik
+
+Pokušajte uz pomoć dokumentacije učitati podatke iz ove datoteke u varijablu `mjestoNH` koja će biti istovjetna varijabli `mjesto` korištenoj u lekciji.
+
+```{r}
+mjestoHH <- read.csv("mjestoNOHEADER.csv", header = FALSE, sep = " ")
+mjestoHH
+
+```
+
+2. U mapi zajedno sa ovom bilježnicom pronađite datoteku `racun.csv` i učitajte ju u varijablu `racun`. Pripazite da nizovi znakova nisu automatski pretvoreni u faktore. Ispišite na zaslon:
+
+- broj redaka ove tablice
+- broj stupaca tablice
+- imena stupaca tablice
+
+```{r}
+racun <- read_csv("racun.csv")
+racun
+ncol(racun)
+nrow(racun)
+names(racun)
+```
+
+3. Za tablicu `racun` napravite sljedeće:
+
+- faktorizirajte stupac `katArtikl`
+- ispišite šifru, naziv i cijenu svih artikala kategorije "slatkisi i grickalice" jeftinijih od XX Kn
+- ispišite koliko proizvoda koje kategorije se nalazi u računu
+- dodajte stupac ukupno koji će sadržavati ukupnu cijenu pojedine stavke uračunavajući i cijenu i količinu
+- izračunajte ukupni iznos računa
+
+```{r}
+
+racun$katArtikl <- factor(racun$katArtikl)
+racun[racun$cijena < 94 & racun$katArtikl=="slatkisi i grickalice", c("sifArtikl", "nazArtikl", "cijena")]
+
+```
+
+# Domaća zadaća
+
+1. Stvorite podatkovni okvir mjesto uz pomoć sljedeće naredbe:
+
+```{r}
+mjesto <- data.frame( pbr = c(10000, 51000, 21000, 31000, 2000),
+         nazivMjesta = c("Zagreb", "Rijeka", "Split", "Osijek", "Dubrovnik"),
+         prirez = c(18, 15, 10, 13, 10))
+
+mjesto
+```
+
+
+
+Dodajte ovom okviru stupac `prirezOpis` koji će biti ordinalna faktorska varijabla sa razinama `"mali"`, `"srednji"` i `"visok"` ovisno o tome da li je postotak prireza strogo manji od 12, između 12 i 15 ili strogo veći od 15. Koristite se naredbom `ifelse`.
+
+```{r}
+mjesto$prirezOpis <- ifelse(mjesto$prirez < 12, "mali", 
+                            ifelse(mjesto$prirez > 15, "visok", "srednji"))
+
+mjesto$prirezOpis <- factor(mjesto$prirezOpis, levels = c("mali", "srednji", "visok"))
+mjesto
+
+
+
+```
+
+2. Zamijenite petlje u sljedećem bloku ekvivalentnim vektoriziranim operacijama (za drugu petlju proučite dokumentaciju funkcije `sum`).
+
+```{r, eval = F}
+a <- numeric()
+i <- 1
+
+while (i <= max(JMBAG %% 100, 50))  {
+  a <- c(a, i)
+  i <- i + 1
+}
+
+a <- c(1:50)
+
+suma <- 0
+
+for (i in a) {
+  if (i %% 2 == 0) suma <- suma + i*i
+}
+
+sum(a[a %% 2 == 0] ** 2)
+
+print(suma)
+
+```
+
+# Domaća zadaća
+
+1. Učitajte sljedeće pakete u radnu okolinu: `magrittr`, `dplyr`, `tidyr`, `ggplot2`. Ispišite stazu pretrage i provjerite gdje se nalaze učitani paketi.
+```{r}
+library(magrittr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+search()
+
+```
+
+
+3. Spomenuli smo da su učitani paketi zapravo "okoline". Ukoliko želimo dobiti direktnu referencu na njih, moramo se poslužiti funkcijom `as.environment` i imenom paketa. Pokušajte dobiti referencu na paket `package:magrittr` u obliku okoline te uz pomoć funkcije `ls` provjerite koje nazive ona sadrži u sebi.
+
+
+## Zadatak 7.2 - korištenje `stopifnot` funkcije
+
+
+```{r}
+# napišite funkciju `veci` koja prima dva numerička vektora iste duljine 
+# i vraća vektor koji sadrži veći od dva elementa na istim mjestima
+# ukoliko jedan ili oba vektora nisu numerički ili nisu iste duljine, 
+# funkcija mora izbaciti grešku
+# u funkciji nemojte koristiti petlje
+
+veci <- function(x, y){
+  stopifnot(is.numeric(x) && is.numeric(y) && length(x) == length(y))
+  
+  novi <- ifelse(x > y, x, y)
+  print(novi)
+  return(novi)
+}
+
+# pozovite funkciju `veci` nad kombinacijama vektora
+#veci(c(T, F, T), c(1, 2, 3))
+#veci(c(1, 2, 3, 4), c(5, 6, 7))
+veci(c(1, 2, 3), c(0, 4, 2))
+
+# (preporuka - drugi dio zadatka isprobati direktno u konzoli!)
+
+```
+
+
+## Zadatak 7.6 - generator funkcija
+
+```{r}
+# stvorite funkciju `tvornicaMnozenja` koja stvara funkcije množenja primljenog broja 
+# sa nekom predefiniranom konstantom
+
+tvornicaMnozenja <- function(c){
+  function(x) c*x
+}
+
+puta2 <- tvornicaMnozenja(2)
+
+# uz pomoć gornje funkcije napravite funkciju `puta2` koja udvostručuje primljeni broj
+print(puta2(3))
+
+# pozovite funkciju `puta2` s parametrom 3 i ispišite rezultat
+
+```
+
+
+# Domaća zadaća
+
+1. R ima funkciju `which` koja pretvara logički vektor u numerički sa rednim brojevima elemenata koji su `TRUE` (tako `c(T, F, F, F, F, T, F, T)` postaje `c(1, 6, 8)`).
+Implementirajte vlastitu inačicu ove funkcije.
+```{r}
+mojWhich <- function(x){
+  stopifnot(is.logical(x))
+  y <- numeric()
+  for(i in 1:length(x)){
+    if(x[i] == T){
+      y <- c(y, i)
+    }
+  }
+  return(y)
+}
+
+# Testiranje funkcije
+logicki_vektor <- c(T, F, F, F, F, T, F, T)
+print(mojWhich(logicki_vektor))  # Očekivani izlaz: 1, 6, 8
+
+```
+
+
+2. Uzmimo numerički vektor x duljine n. U statistici standardiziranim momentom k-tog reda zovemo vrijednost:
+
+$$\frac{1}{n}\sum_{i=1}^n{(x_i - \bar{x})}^{k+1}$$
+
+Stvorite generator funkcija `moment(k)` koji će stvarati funkcije za računanje standardiziranog centralnog momenta k-tog reda. Stvorite funkcije `nulti_moment(x)` i `prvi_moment(x)` sa vrijednosti parametra `k` redom `0` i `1`. Testirajte funkcije na vektoru `1:1000`. Usporedite rezultate koje daje funkcija `sd` (standardna devijacija) nad vektorom `1:1000` i korijen rezultata funkcije `prvi_moment` nad istim vektorom.
+
+```{r}
+moment <- function(n){
+  function(x){
+    std_moment <- (1/length(x)) * sum((x - mean(x))**(n+1))
+    return(std_moment)
+  }
+}
+
+
+nulti_moment <- moment(0)
+prvi_moment <- moment(1)
+
+x <- 1:1000
+nulti_moment(x)
+prvi_moment(x)
+
+print(sd(x))
+print(sqrt(prvi_moment(x)))
+```
+
+3. Uzmimo matricu `m` stvorenu sljedećom naredbom:
+
+```{r}
+m <- rbind(1:5, seq(2, 10, 2), rep(3, 5), 3:7, seq(100, 500, 100))
+```
+
+
+Uz pomoć funkcije `apply` i nove anonimne funkcije stvorite vektor koji će sadržavati prvi parni element svakog retka, ili nulu ako pripadajući redak nema parnih elemenata.
+```{r}
+x <- apply(m, 1, function(x){
+  y <- x[x %% 2 == 0]
+  y <- ifelse(length(y) > 0, y[1], 0)
+})
+
+```
+
+4. Sljedeće naredbe stvoriti će listu od 100 elemenata gdje će svaki element biti numerički vektor nasumične duljine od 1 do 10.
+
+```{r}
+set.seed(36541994)  # otkomentirati i zamijeniti svojim JMBAG-om
+lista <- replicate(100, sample(1:10, sample(1:10, 1)))
+
+```
+
+
+Uz pomoć funkcija `lapply` / `sapply ` (i dodatnih naredbi ako je potrebno) stvorite:
+
+- numerički vektor `v` sa duljinama elemenata liste
+```{r}
+v <- sapply(lista, length)
+v
+
+```
+- listu `l` sa normaliziranim numeričkim vektorima originalne liste
+```{r}
+l <- lapply(lista, function(x){
+  (x - min(x)) / (max(x) - min(x))
+})
+l
+
+```
+- numerički vektor `ind` sa indeksima svih elemenata liste koji sadrže broj 94 %% 10
+```{r}
+ind <- sapply(lista, function(x){
+  any(x %% 10 == 94 %% 10)
+})
+
+ind <- which(ind)
+ind
+
+```
+- podatkovni okvir `df5` koji kao stupce sadrži sve elemente liste duljine 5
+```{r}
+rezultat <- lapply(lista, function(x) {
+  if (length(x) == 5) {
+    return(x)
+  } else {
+    return(NULL)
+  }
+})
+
+# Koristimo Filter da bismo uklonili NULL elemente
+filtrirana_lista <- Filter(Negate(is.null), rezultat)
+
+df5 <- as.data.frame(filtrirana_lista)
+
+# jednostavnije bez lapply: df5 <- as.data.frame(lista[lengths(lista) == 5])
+df5
+```
+
+ ***ISPIT 2018***
+
+(2 boda)
+
+Uz pomoć jedne ili više R naredbi stvorite sljedeće vektore:
+vektor a koji sadrži sve prirodne brojeve od 1 do 10000 koji završavaju znamenkom 5
+vektor b koji izgleda ovako: (1, NA, 2, NA, 3, NA, ...., 9999, NA, 10000, NA)
+Ispišite prvih 20 elemenata svakog od vektora na zaslon.
+
+NAPOMENA: Rješenje ne smije koristiti programske petlje
+
+RJEŠENJE
+```{r}
+a <- 1:1000
+a <- a[a %% 5 == 0 & a %% 10 != 0]
+
+b <- rep(1:10000, times = 2)
+b[seq(2, 10000, by=2)] <- NA 
+
+b[1:20]
+a[1:20]
+```
+
+
+(2 boda)
+
+Zadana je matrica m dimenzija 6 x 6 popunjena nasumičnim prirodnim brojevima na sljedeći način:
+set.seed(1234)
+m <- matrix(sample(1:6, 36, replace = T), 6)
+colnames(m) <- LETTERS[1:6]
+rownames(m) <- 1:6
+Ispišite matricu m2 dimenzija 6 x 2 koja ima stupce A + 2*D i B - F, gdje slova A, B, D i F označavaju stupce originalne matrice.
+
+RJEŠENJE
+```{r}
+set.seed(1234)
+m <- matrix(sample(1:6, 36, replace = T), 6)
+colnames(m) <- LETTERS[1:6]
+rownames(m) <- 1:6
+
+m
+
+prvistu <- m[, "A"] + 2 * m[, "D"]
+drugistu <- m[, "B"] - m[, "F"]
+prvistu
+drugistu
+
+m2 <- matrix(c(prvistu, drugistu), nrow = 6, ncol = 2)
+colnames(m2) = c("A + 2*D", "B - F")
+m2
+
+```
+
+(2 boda)
+
+Zadana je lista l:
+set.seed(1234)
+l <- list(a = 1:5, b = rep(T, F, 5), c = 2, d = 1:10000, e = list(1, runif(5)))
+Obrišite element d iz liste l.
+RJEŠENJE
+```{r}
+l <- list(a = 1:5, b = rep(T, F, 5), c = 2, d = 1:10000, e = list(1, runif(5)))
+
+l$d <- NULL
+l
+
+```
+
+Ispišite drugi element podliste e.
+RJEŠENJE
+```{r}
+l$e[[2]] <- NULL
+
+l
+```
+
+(2 boda)
+
+Zadana je sljedeća konstruktorska funkcija koja stvara objekt klase Kvadar.
+Kvadar <- function(x, y, z) {
+  kvadar <- list(duljina = x, sirina = y, visina = z)
+  class(kvadar) = "Kvadar"
+  kvadar
+}
+Želimo da generička funkcija summary primjenjena na klasu Kvadar daje sljedeći ispis:
+
+> k = Kvadar(2, 2, 4)
+> summary(k)
+Oplosje: 40
+Volumen: 16
+Omogućite da generička funkcija summary radi na navedeni način i demonstrirajte njezin rad na primjeru kvadra sa dimenzijama (3, 4, 5).
+
+RJEŠENJE
+
+```{r}
+Kvadar <- function(x, y, z) {
+  kvadar <- list(duljina = x, sirina = y, visina = z)
+  class(kvadar) = "Kvadar"
+  kvadar
+}
+
+summary.Kvadar <- function(x){
+  sum <- paste("Oplosje:", 2*(x$duljina*x$sirina + x$duljina*x$visina + x$sirina*x$visina),
+        "\nVolumen: ", x$duljina * x$sirina * x$visina)
+  cat(sum)
+}
+
+kva <- Kvadar(3, 4, 5)
+summary(kva)
+```
+
+(4 boda)
+
+Datoteka ispiti.csv sadrži stupce JMBAG i ocjena.
+Učitajte podatkovni okvir u varijablu ispiti i proučite učitane podatke.
+RJEŠENJE
+
+```{r}
+ispiti <- read_csv("ispiti.csv")
+
+```
+
+Podatkovni okvir kasniUnos sadrži retke koji greškom nisu upisani u datoteku ispiti.csv.
+kasniUnos <- data.frame(JMBAG = c("36371235", "36391871", "36397615", "36381973", "20259615"),
+                        ocjena = c(1, 1, 3, 5, 2))
+Dodajte podatke iz ovog podatkovnog okvira na kraj podatkovnog okvira ispit.
+
+RJEŠENJE
+```{r}
+kasniUnos <- data.frame(JMBAG = c("36371235", "36391871", "36397615", "36381973", "20259615"),
+                        ocjena = c(1, 1, 3, 5, 2))
+
+rbind(ispiti, kasniUnos)
+
+```
+
+Napišite jednu ili više naredbi koje će dodati okviru kategorijsku varijablu Ishod sa dvije razine, Prolaz i Pad u ovisnosti o ocjeni (1 - “Pad”, sve ostalo - “Prolaz”).
+
+RJEŠENJE
+```{r}
+ispiti$Ishod <- ifelse(ispiti$ocjena == 1, "Pad", "Prolaz")
+
+ispiti$Ishod <- factor(ispiti$Ishod, levels = c("Pad", "Prolaz"))
+
+
+```
+
+
+(2 boda)
+
+Preoblikujte segment sljedećeg programskog odsječka između znakova ################## tako da ne koristi petlju.
+set.seed(1234)
+l <- list(sample(1:100, 10), rep(c(1, 2, 3), 30), 1:1000)
+
+#######################
+
+rez <- numeric()
+for (i in l) {
+  suma <- 0
+      for (j in i) {
+          suma <- suma + 2 * j 
+      }
+  rez <- c(rez, suma)
+}
+######################
+
+rez
+## [1]    1088     360 1001000
+
+RJEŠENJE
+
+```{r}
+set.seed(1234)
+l <- list(sample(1:100, 10), rep(c(1, 2, 3), 30), 1:1000)
+
+rez <- sapply(l, function(x){
+  2 * sum(x)
+})
+
+
+rez
+
+
+```
+
+***2019 ISPIT ***
+
+(2 boda)
+
+Uz pomoć jedne ili više R naredbi stvorite sljedeće vektore:
+vektor a koji sadrži sve prirodne brojeve od 100 do 10000 koji završavaju znamenkom 7
+vektor b koji izgleda ovako: (-500, 500, NA, -499, 499, NA, ..., -1, 1, NA)
+Ispišite prvih 5 i zadnjih 5 elemenata svakog od vektora na zaslon.
+
+NAPOMENA: Rješenje ne smije koristiti programske petlje
+
+RJEŠENJE
+```{r}
+a <- 100:10000
+a <- a[a %% 10 == 7]
+head(a)
+tail(a)
+
+b <- rep(-500:-1, each = 3)
+b[seq(2, 1500, by=3)] <- -b[seq(2, 1500, by=3)]
+b[seq(3, 1500, by=3)] <- NA
+head(b)
+tail(b)
+
+```
+
+
+(2 boda)
+
+Napravite funkciju createMatrix(n) koja za zadani cijeli broj n vraća kvadratnu matricu reda n u kojoj je svaki red popunjen cijelim brojem koji odgovara indeksu retka. Na primjer, za vrijednost parametra n jednaku 4 funkcija mora vratiti matricu koja izgleda ovako:
+1 1 1 1
+2 2 2 2
+3 3 3 3
+4 4 4 4
+Ispišite rezultat poziva funkcije createMatrix(7).
+
+RJEŠENJE
+```{r}
+createMatrix <- function(n){
+  m <- matrix(rep(1:n, each = n), nrow = n, ncol = n, byrow = TRUE)
+  return(m)
+}
+
+createMatrix(7)
+
+```
+
+(2 boda)
+
+Zadana je lista l:
+l <- list(smallLetters = letters[1:15], LETTERS[16:27], c = c(T, F, T, F))
+Preimenujte neimenovani element tako da se zove bigLetters.
+RJEŠENJE
+
+```{r}
+l <- list(smallLetters = letters[1:15], LETTERS[16:27], c = c(T, F, T, F))
+
+
+names(l)[2] <- "bigLetters"
+
+l
+
+```
+
+(1 bod)
+
+Zadana je sljedeća konstruktorska funkcija koja stvara objekt klase Book.
+Book <- function(author, title) {
+  b <- list(author = author, title = title)
+  class(b) = "Book"
+  b
+}
+
+print.Book <- function(b) {
+  cat(paste0("Author: ", b$author, "\nTitle: ", b$title, "\n"))
+}
+Stvorite konstruktorsku funkciju za objekt klase Coursebook koja nasljeđuje klasu Book a koja ima dodatni atribut naziva courseName sa nizom znakova koji označavaju naziv predmeta na kojem se dotična knjiga koristi kao udžbenik.
+
+Uz pomoć ove konstruktorske funkcije stvorite novi objekt R.book sa atributima Hadley Wickham (autor), Advanced R (naziv), R programming (naziv predmeta). Ispišite objekt na zaslon (uz pomoć generičke funkcije print).
+
+RJEŠENJE
+
+```{r}
+Book <- function(author, title) {
+  b <- list(author = author, title = title)
+  class(b) = "Book"
+  b
+}
+
+print.Book <- function(b) {
+  cat(paste0("Author: ", b$author, "\nTitle: ", b$title, "\n"))
+}
+
+Coursebook <- function(author, title, courseName){
+  c <- list(author = author, title = title, courseName = courseName)
+  class(c) <- c("Coursebook", "Book")
+  c
+}
+
+cb <- Coursebook("Hadley Wickman", "Advanced R", "R programming")
+print(cb)
+
+```
+
+(3 boda)
+
+Datoteka coursePoints.csv sadrži podatke o bodovima studenata na sveučilišnom predmetu. Učitajte podatkovni okvir u varijablu points i proučite učitane podatke, a potom riješite sljedeće zadatke.
+Ispišite identifikator studenta i bodove iz međuispita za sve studente koji imaju strogo manje od 10 bodova iz laboratorija i strogo manje od 5 bodova iz domaćih zadaća.
+RJEŠENJE
+```{r}
+
+points <- read_csv("points.csv")
+points
+
+points[points$laboratory > 10 & points$homework > 5, c("studentid", "finalexam")]
+
+
+```
+
+Dodajte stupac totalPoints koji će zbrojiti bodove iz prisutnosti, laboratorija, domaćih zadaća, međuispita, projekta i konačnog ispita (studenti koji nisu predali projekt moraju imati NA za konačne bodove budući da ne mogu proći predmet). Ispišite prvih 7 redaka podatkovnog okvira.
+RJEŠENJE
+
+```{r}
+
+points$totalPoints <- apply(points[, 2:ncol(points)], 1, function(row) {
+  if (row['project'] > 0) {
+    return(sum(row, na.rm = TRUE))
+  } else {
+    return(NA)
+  }
+})
+
+  
+points[1:7, ]
+
+```
+
+Dodajte kategorijski stupac outcome koji će imati vrijednost Pass za studente koji u konačnici imaju strogo više od 50 bodova i Fail za sve ostale. Ispišite frekvencije prolaza i padova na ovom sveučilišnom predmetu.
+RJEŠENJE
+
+```{r}
+
+ifelse(points$totalPoints > 50 & !is.na(points$totalPoints), 
+       "Prolaz", "Pad"
+       ) %>% as.vector() -> points$outcome 
+
+points
+
+```
+
+(2 boda)
+
+Preoblikujte segmente sljedećih programskih odsječaka između znakova ################## tako da ne koriste petlje.
+#######################
+x <- 1
+resultA <- 1
+
+while(x <= 100) {
+  if (!(x %% 17)) resultA <- resultA * x
+  x = x + 1
+}
+######################
+
+resultA
+## [1] 170382840
+RJEŠENJE
+
+#######################
+```{r}
+x <- 1:100
+x <- x[x %% 17 == 0]
+resultA <- prod(x)
+resultA
+
+```
+
+
+set.seed(1234)
+l <- list(a = 1:100, b = 10:sample(100:200, 1), c = LETTERS)
+
+########################
+resultB <- 0
+for (i in l) {
+  resultB <- resultB + length(i)
+}
+###########################
+
+resultB
+## [1] 228
+RJEŠENJE
+```{r}
+
+l <- list(a = 1:100, b = 10:sample(100:200, 1), c = LETTERS)
+resultB <- sum(lengths(l))
+
+```
+
+(3 boda)
+
+Učitajte podatke iz datoteke dirtyIris.csv u varijablu dirtyIris. Proučite ovaj podatkovni okvir, a potom ga izmjenite tako da odgovara principima urednih podataka. Pripazite da tipovi stupaca u konačnici odgovaraju njihovom sadržaju.
+RJEŠENJE
+```{r}
+
+dirtyIris <- read_csv("dirtyIris.csv")
+head(dirtyIris)
+
+
+dirtyIris <- separate(dirtyIris, "FeatureNames", c("Type", "Feature"), extra = "merge")
+dirtyIris
+
+dirtyIris <- pivot_wider(dirtyIris, names_from = "Feature", values_from = FeatureValues)
+dirtyIris
+
+dirtyIris <- separate(dirtyIris, "Length.and.Width", c("Length", "Width"), sep = "/", remove = TRUE)
+
+dirtyIris$Width = as.numeric(dirtyIris$Width)
+dirtyIris$Length = as.numeric(dirtyIris$Length)
+
+#dirtyIris %>% lapply(function(x) if(is.numeric(x)) return(as.numeric(x)) else return(x))
+
+dirtyIris
+
+
+
+```
+
+
+***ISPIT 2020*** 
+
+
+1. (2 points) Use one or more R instructions to create the vectors x and y with the following characteristics:
+
+x contains all 6-digit numbers divisible with the number 123
+y contains the following elements: (1, 1, NA, 2, 2, NA, 3, 3, NA, …., 100, 100, NA)
+Print the - first 20 elements of x - last 20 elements of y
+
+NOTE: The solutions cannot use program loops!
+
+SOLUTION
+```{r}
+x <- 100000 : 999999
+x <- x[x %% 123 == 0]
+head(x, 20)
+
+y <- rep(1:100, each = 3)
+y[seq(1, 100, by=1) * 3] <- NA
+tail(y, 20)
+
+```
+(2 points)
+
+2. (2 points) The following code creates a matrix m of size 6 x 6 filled with random natural numbers:
+
+set.seed(1234)
+m <- matrix(sample(1:6, 36, replace = T), 6)
+colnames(m) <- LETTERS[1:6]
+rownames(m) <- 1:6
+Create a matrix called m2 that only contains rows of m whose sum of elements is larger then 25. Then print the transposed version of m2.
+
+SOLUTION
+
+```{r}
+set.seed(1234)
+m <- matrix(sample(1:6, 36, replace = T), 6)
+colnames(m) <- LETTERS[1:6]
+rownames(m) <- 1:6
+
+m
+
+m2 <- matrix(m[apply(m, 1, sum) > 25], ncol = ncol(m)) 
+m2
+
+```
+
+3. (3 points) In the global environment you should see a list called l with 26 numeric vectors as elements (named as letters from A to Z). Each numeric vector contains random numbers from 1 to 100, and is of random length from 5 to 25. Briefly explore the contents of this list and then do the following assignments:
+
+Delete the last two elements of this list.
+SOLUTION
+
+```{r}
+l
+
+
+```
+
+Answer the following question: can this list be converted to a data frame? Why?
+SOLUTION
+
+```{r}
+
+
+```
+
+Rewrite the following code so it does not use explicit programming loops:
+newList <- list()
+j <- 1
+for (i in 1:length(l)) {
+  if (length(l[[i]]) > 20) {
+      newList[j] <- l[i]
+      names(newList)[j] <- names(l)[i]
+      j <- j + 1
+  }
+}
+newList
+SOLUTION
+```{r}
+newList <- l[lapply(l, length) > 30]
+
+newList
+
+```
+
+
+4. (2 points) Load the iris data frame in global environment by running the following chunk:
+
+```{r}
+
+
+```
+Answer the following:
+
+What is the average petal length for the “versicolor” species of iris flower?
+SOLUTION
+```{r}
+
+
+```
+
+What is the largest approximate surface area of a sepal in this dataset (length * width)?
+SOLUTION
+```{r}
+
+
+```
+
+5. (4 points) Create a data frame variable called deck by loading data from a CSV file playingCards.csv.
+
+Then:
+
+explore this data frame by printing the first and last 5 rows
+factorize the suit and rank columns
+print this data frame’s structure
+SOLUTION
+
+deck <- read.csv(file = "playingCards.csv", stringsAsFactors = F)
+head(deck, 5)
+tail(deck, 5)
+deck$suit <- factor(deck$suit)
+deck$rank <- factor(deck$rank)
+str(deck)
+##   cardID     suit rank
+## 1      1   Hearts    2
+## 2      2 Diamonds    2
+## 3      3   Spades    2
+## 4      4    Clubs    2
+## 5      5   Hearts    3
+##    cardID     suit rank
+## 48     48    Clubs    K
+## 49     49   Hearts    A
+## 50     50 Diamonds    A
+## 51     51   Spades    A
+## 52     52    Clubs    A
+## 'data.frame':    52 obs. of  3 variables:
+##  $ cardID: int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ suit  : Factor w/ 4 levels "Clubs","Diamonds",..: 3 2 4 1 3 2 4 1 3 2 ...
+##  $ rank  : Factor w/ 13 levels "10","2","3","4",..: 2 2 2 2 3 3 3 3 4 4 ...
+(NOTE: in the global environment you have a variable called dbkp which you can use as deck variable in the following assignments if you haven’t managed to properly solve the a) part, or to check if you correctly prepared the deck variable)
+
+Add a column called value which will make each card numbered 2-10 to be worth its numerical value of points, and each face card (J-A) be worth 10 points.
+NOTE: do not forget that the rank column is a factor!
+
+SOLUTION
+
+deck$value <- as.numeric(as.character(deck$rank))
+## Warning: NAs introduced by coercion
+deck[is.na(deck$value), "value"] <- 10
+
+# ifelse works too if applied properly
+Shuffle the deck (i.e. randomize the order of rows in the deck variable), then deal the first hand by printing the first five rows. Finally, print the total value of this first hand of cards.
+# HINT: examine the result of this command to give you an idea how to implement shuffling
+sample(1:5, 5)
+SOLUTION
+
+deck <- deck[sample(1:nrow(deck), nrow(deck)), ]
+deck[1:5, ]
+sum(deck[1:5, "value"])
+##    cardID     suit rank value
+## 36     36    Clubs   10    10
+## 8       8    Clubs    3     3
+## 32     32    Clubs    9     9
+## 42     42 Diamonds    Q    10
+## 43     43   Spades    Q    10
+## [1] 42
+6. (2 points) The following constructor function creates an object of class Cuboid.
+
+Cuboid <- function(x, y, z) {
+  cuboid <- list(length = x, width = y, height = z)
+  class(cuboid) = "Cuboid"
+  cuboid
+}
+We want to be able to use generic function summary on the class Cuboid to get the following printout:
+
+> k = cuboid(2, 2, 4)
+> summary(k)
+Length: 2, Width: 2, Height: 4
+Surface area: 40
+Volume: 16
+Enable this and demonstrate how summary function works on a cuboid with dimensions (3, 4, 5).
+
+SOLUTION
+
+summary.Cuboid <- function(k) {
+  cat(paste0("Length: ", k$length, ", Width: ", k$width, ", Height: ", k$height, "\n",
+     "Surface area: ", 2*k$length*k$width + 2*k$length*k$height + 2*k$width*k$height, "\n",
+      "Volume: ", k$length*k$width*k$height, "\n"))
+}
+
+summary(Cuboid(3, 4, 5))
+## Length: 3, Width: 4, Height: 5
+## Surface area: 94
+## Volume: 60

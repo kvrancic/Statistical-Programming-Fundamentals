@@ -1,0 +1,50 @@
+---
+title: "11 Obrada znakovnih nizova - ZADAĆA"
+author: "36541994 Karlo Vrančić"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(stringr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Domaća zadaća {-}
+
+Sljedeći zadaci odnose se na podatkovni skup pohranjen u CSV datoteci `crimeSample.csv` a koji predstavlja uzorak iz evidencije kriminalnih incidenata u gradu Philadelphiji (originalni podatkovni skup može se naći na <a href = "https://www.opendataphilly.org/dataset/crime-incidents">ovoj poveznici</a>). Originalni skup stupaca je reduciran a iz skupa svih obzervacija slučajnim odabirom uzorkovano je 1000 incidenata.
+
+Prije rješavanja zadataka učitajte podatke u podatkovni okvir crimes i upoznajte se s podatkovnim skupom (`str`, `head`, itd.)
+
+```{r}
+crimes = read_csv("crimeSample.csv")
+str(crimes)
+head(crimes)
+
+```
+
+
+1. . Odgovorite na pitanje: koliki je postotak incidenata gdje opis incidenta sadrži riječ `"burglary"` ili `"robbery"`? (savjet: pretvorite cijeli stupac sa opisom zločina u mala slova uz pomoć funkcije `tolower()`).
+
+```{r}
+crimes$Text_General_Code %>% tolower %>% str_detect("burglary|robbery") %>% 
+  sum %>% '/'(nrow(crimes))
+
+str_count("banana", c("a","n"))
+
+```
+
+2. Ispišite na zaslon sve jedinstvene četveroznamenkaste brojeve koje možete naći u nazivima ulica u kojima je evidentiran kriminalni incident.
+```{r}
+crimes$Location_Block %>% str_extract_all("[:digit:]{4}") %>% unlist %>% unique
+```
+
+
+
+
+
+
+
+
+

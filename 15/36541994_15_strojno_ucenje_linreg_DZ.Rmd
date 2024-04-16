@@ -1,0 +1,80 @@
+---
+title: "15 strojno ucenje - linearna regresija - ZADAĆA"
+author: "36541994 Karlo Vrančić"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+library(MASS)
+library(tidyverse)
+library(stringr)
+library(ggplot2)
+library(GGally)
+library(sn)
+library(gridExtra)
+library(Hmisc)
+library(broom)
+library(car)
+library(corrplot)
+library(ggcorrplot)
+
+knitr::opts_chunk$set(results = 'hold')
+
+```
+
+## Domaća zadaća
+
+1. Učitajte skup podataka `iris` u globalno okruženje.
+
+Nacrtajte raspršeni graf koji prikazuje odnos između duljine latice (*Petal*) i duljine čašnog lista (*Sepal*). Korištenjem geometrije za crtanje dijagonalnih referentnih linija (funkcija `geom_abline`) pokušajte pogoditi nagib i presjecište za liniju koja "najbolje odgovara". Nemojte varati korištenjem funkcije `geom_smooth`!
+
+Primjer: `... + geom_abline(slope = 1, intercept = -3)`
+
+Istrenirajte model linearne regresije s duljinom latice kao prediktorom i duljinom čašnog lista kao ciljnom varijablom. Usporedite dobivene parametre s onima koje ste sami procijenili.
+
+```{r}
+data("iris")
+glimpse(iris)
+
+ggplot(iris, aes(x = Petal.Length, y = Sepal.Length)) + 
+  geom_point() + 
+  geom_abline(slope = 0.5, intercept = 4, color = "purple", lwd = 1.1) + 
+  labs(x = "Petal Length", y = "Sepal Length") + 
+  theme_bw()
+
+linMod <- lm(iris$Sepal.Length ~ iris$Petal.Length, data = iris)
+summary(linMod)
+```
+
+
+2. Ponovno nacrtajte raspršeni graf iz 1), ali obojite točke na temelju vrste cvijeta. Objasnite zašto jedan regresijski model možda nije najbolji izbor za predviđanje duljine latice na temelju duljine čašnog lista.
+
+```{r}
+ggplot(iris, aes(x = Petal.Length, y = Sepal.Length, color = Species)) + 
+  geom_point() + 
+  geom_abline(slope = 0.40892, intercept = 4.30660, color = "black", lwd = 1.1) + 
+  labs(x = "Petal Length", y = "Sepal Length") + 
+  scale_color_ordinal() + 
+  theme_bw()
+```
+
+
+3. Istrenirajte model postupne linearne regresije gdje je duljina čašnog lista ciljna varijabla, a sve druge varijable potencijalni prediktori (uključujući i varijablu vrste). Usporedite sažetke modela između modela iz 2) i konačnog postupnog modela. Koji model preferirate i zašto?
+
+```{r}
+iris_sve <- lm(Sepal.Length ~ ., data = iris)
+iris_prazno <- lm(Sepal.Length ~ 1, data = iris)
+
+lm1 <- stepAIC(iris_sve, direction="backward", trace = 0)
+lm2 <- stepAIC(iris_prazno,
+               direction = "forward",
+               scope = list(upper = iris_sve, lower = iris_prazno),
+               trace = 0)
+
+summary(lm1)
+summary(lm2)
+
+```
+

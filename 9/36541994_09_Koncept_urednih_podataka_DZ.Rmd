@@ -1,0 +1,69 @@
+---
+title: "9 Koncept urednih podataka - DOMAĆA ZADAĆA"
+author: "36541994 Karlo Vrančić"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r include=FALSE}
+library(magrittr)
+library(tidyr)
+library(readr)
+library(dplyr)
+knitr::opts_chunk$set(results = 'hold')
+```
+
+
+# Domaća zadaća
+1. Inicijalizirajte generator slučajnih brojeva uz pomoć naredbe `set.seed(JMBAG)`. Potom uz pomoć jedne naredbe i `%>%` operatora izvedite sljedeće:
+
+- stvorite 10000 nasumičnih brojeva izvučenih iz normalne razdiobe za aritmetičkom sredinom 10000 i standardnom devijacijom 1000
+- zaokružite brojeve na prvi veći cijeli broj
+- izbacite duplikate iz skupa
+- poredajte skup po veličini
+- slučajnim odabirom iz skupa izvucite 100 elemenata
+- organizirajte tih 100 elemenata u matricu 10 x 10, složenu po retcima
+- izračunajte sume redaka matrice
+- ispišite prosjek suma redaka na zaslon. 
+
+```{r}
+set.seed(36541994)
+
+rnorm(10000, mean = 1000, sd = 1000)%>% 
+  ceiling() %>% 
+  unique() %>% 
+  sort() %>%
+  sample(100) %>% 
+  matrix(ncol = 10, byrow = TRUE) %>% 
+  apply(1, sum) %>% 
+  mean() -> x 
+x
+
+```
+
+2. U datoteci `weather.csv` nalaze se podaci o izmjerenim vremenskim uvjetima od strane meteorološke stanice koja svaki sat vremena mjeri temperaturu, tlak, vlažnost i brzinu vjetra (podaci su preuzeti i prilagođeni iz podatkovnog skupa paketa `weatherData` dostupnog na CRAN-u). Izvedite sljedeće:
+- učitajte datoteku u podatkovni okvir i proučite učitane podatke (`names`, `str`, `summary`, `head`...)
+- odgovorite: da li se radi o urednim podacima? Zašto?
+- poduzmite odgovarajuće korake kako bi dobili podatkovni okvir koji odgovara principu urednih podataka
+- spremite "uređeni" u okvir u datoteku `weatherClean.csv`
+
+```{r}
+weather_data <- read_csv("weather.csv")
+
+names(weather_data)
+str(weather_data)
+summary(weather_data)
+head(weather_data)
+
+# nisu uredni -> potrebne su još neke preinake 
+
+weather_data <- separate(weather_data, "time_hour", sep = " ", into = c("time", "hour"))
+head(weather_data)
+
+weather_data <- pivot_wider(weather_data, values_from = "Value", names_from = "Measure")
+
+head(weather_data)
+
+write_csv(weather_data, file = "weatherClean.csv")
+
+```

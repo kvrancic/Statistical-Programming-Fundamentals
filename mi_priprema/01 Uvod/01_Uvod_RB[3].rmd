@@ -1,0 +1,123 @@
+
+---
+title: "1 Uvod"
+author: ""
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+# ovo je tzv. "setup chunk"
+# tu postavljamo bitne parametre te učitavamo sve nužne pakete
+# u najvećem broju slučajeva ovaj dio ne morate dirati
+# budite sigurni da razvojna okolina ima spuštene sve pakete koji su ovdje navedeni
+# sučelje RStudio će automatski detektirati ako neki nedostaju - instalirajte ih prije nastavljanja
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(results = 'hold')
+```
+
+***
+
+## Uvod
+
+### Radne bilježnice
+
+**VAŽNO!** osnovna svrha prve radne bilježnice jest upoznavanje sa razvojnim sučeljem i sustavom predaje radnih bilježnica i domaćih zadaća. Uspješna predaja riješene radne bilježnice i pripadne domaće zadaće predstavlja dokaz ispravnosti platforme te razumijevanje procesa predaje, što je nužan preduvjet za praćenje (i uspješno polaganje) predmeta.
+
+
+Za uspješno praćenje predmeta i obavljanje gore navedenih aktivnosti napravite sljedeće korake:
+
+1) Pripremite zasebnu mapu na računalu u koju ćete smjestiti RMD datoteke vezane uz predmet (ove radne bilježnice, te datoteke za rješavanje domaćih zadaća koje ćete rješavati sami)
+
+2) Opcionalno (ali preporučeno) - prema uputama iz udžbenika u navedenoj mapi stvorite novi projekt `OSP` koji će predstavljati osnovno okruženje za obavljanje aktivnosti vezanih uz predmet; korištenje podmapa nije nužno
+
+3) U mapu kopirajte ovu (i sve buduće) radne bilježnice, **te ih preimenujte prema sljedećem predlošku**: `01_Uvod_RB.rmd` -> `<JMBAG>_01_Uvod_RB.rmd`, gdje `<JMBAG>` predstavlja Vaš JMBAG bez vodećih nula. Dakle, ako je Vaš JMBAG `0036358131`, onda ćete datoteku nazvati `36358131_01_Uvod_RB.rmd`. 
+
+4) **Upišite Vaše osobne podatke na vrh bilježnice** - unutar navodnih znakova pored ključne riječi `author:` napišite `<JMBAG> <Prezime i ime>`. Dakle, ako je 
+Vaš JMBAG `0036358131`, prezime `Perić` a ime `Pero`, onda ova stavka na vrhu dokumenta mora izgledati ovako `author: "36358131 Perić Pero"`. 
+
+5) Riješite radnu bilježnicu (interaktivno na predavanju ili naknadno). Prema uputama iz udžbenika aktivnosti se u ovom dijelu svode na izvršavanje primjera, gdje je potrebno samo izvršiti kod i razmotriti rezultat:
+
+
+### Primjer 1.1 - nekoliko jednostavnih naredbi R programskog jezika
+
+```{r}
+3+2         #zbrajanje
+log(10)    # prirodni logaritam!
+log10(10)   # ovo je logaritam baze 10! Usput, komentare pišemo znakom "#"
+sin(0.5 * pi)      # pi je jedna od ugrađenih konstanti
+```
+
+
+ili rješavanje zadataka, gdje morate upisati valjani programski kod prema instrukcijama:
+
+### Zadatak 1.1 - provjera radne mape
+
+
+```{r}
+# izvršite sljedeće naredbe uklanjanjem znaka komentara
+
+#getwd()     # mapa u kojoj trenutno radimo
+#setwd(".")  # ovdje možemo navesti novu radnu mapu ukoliko želimo
+
+```
+
+
+6) Transformirajte radnu bilježnicu u HTML format. Ovo možete učiniti na nekoliko načina, a najjednostavniji je klikanje na ikonu "Knit" na gornjem dijelu sučelja. Ukoliko je proces uspješno prošao, u zasebnom prozoru ćete vidjeti HTML inačicu radne bilježnice, a u mapi projekta datoteku `<OIB>_01_Uvod.html`.
+
+
+7) Podignite radnu bilježnicu **u HTML formatu** na adekvatno mjesto u **Moodle** podsustavu. Prije konačne predaje provjerite da ste:
+    - ispravno preimenovali datoteku
+    - ispravno upisali podatke na vrh dokumenta
+    - ispravno generirali HTML inačicu (nemojte predavati RMD datoteke!)
+    
+   Budući da se provjera predanih materijala radi poluautomatski, ispravnost gore navedenih radnji jest strogi i nužni preduvjet za ispunjenje obveza na predmetu. 
+
+
+### Domaće zadaće
+
+Na kraju većine radnih bilježnica nalaziti će se **zadaci za domaću zadaću**.
+
+Za uspješnu predaju domaće zadaće morate napraviti sljedeće:
+
+1) Napraviti **zasebni** RMD dokument naziva `<JMBAG>_01_Uvod_DZ.rmd` (nazive prilagoditi vlastitom JMBAG-u te radnoj bilježnici kojoj zadaća pripada).
+
+2) Dokument oblikovati prema predlošku radne bilježnice, što uključuje i **upis vlastitih informacija pod polje author:**, analogno radnoj bilježnici.
+
+3) U tijelo dokumenta kopirati zadatke za domaću zadaću (*Cut* iz "RB" dokumenta -> *Paste* u "DZ" dokument)
+
+4) Riješiti zadatke dodavanjem isječaka koda ispod pripadnog zadatka - novi isječak dodajete klikom na ikonicu sučelja gore desno ili kombinacijom tipki `CTRL + ALT + I`.
+
+5) Transformirajte domaću zadaću u HTML format, analogno postupku kod radne bilježnice.
+
+6) Podignite domaću zadaću **u HTML formatu** na adekvatno mjesto u **Moodle** podsustavu. Prije konačne predaje provjerite da ste:
+    - ispravno preimenovali datoteku
+    - ispravno upisali podatke na vrh dokumenta
+    - ispravno generirali HTML inačicu (nemojte predavati RMD datoteke!)
+    - podigli datoteku na ispravno mjesto (ne u mjesto za radne bilježnice!!)
+
+U nastavku slijedi trivijalni primjer zadataka za domaću zadaću. Uočite da zadaci mogu biti povezani sa Vašim JMBAG-om i koristiti elemente istog kao parametre - budite sigurni da ispravno interpretirate tekst zadatka.
+
+
+
+
+***
+
+-------- ovaj dio izrezati u zasebni dokument!!! (ovaj naputak se neće ponavljati u ostalim radnim bilježnicama) ------------
+
+# Domaća zadaća
+
+VAŽNO: U sljedećim zadacima znak XX predstavlja **zadnje dvije znamenke Vašeg JMBAG-a**. 
+
+Primjer: ako Vaš JMBAG glasi 12345678, onda XX predstavlja broj 78, 12XX predstavlja broj 1278, 2 * XX predstavlja broj 156 itd.
+
+**Prije rješavanja i predaje domaće zadaće izmijenite tekst zadatka tako da sve kombinacije znakova XX, YY i ZZ zamijenite pripadnim brojevima! U suprotnom se domaća zadaća neće uvažiti.**
+
+
+1. Ispišite na zaslon Vaš JMBAG.
+
+2. Ispišite na zaslon broj koji se dobije dodavanjem broja 10 zadnjim dvijema znamenkama Vašeg JMBAG-a (tj. skraćeno - ispišite na zaslon broj XX + 10). Broj XX ne morate dobiti računski, možete direktno upisati zadnje dvije znamenke.
+
+3. Ispišite radnu mapu u kojoj se nalazi ovaj dokument domaće zadaće.
